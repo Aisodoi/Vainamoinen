@@ -87,12 +87,13 @@ export class ResourceKind extends BaseResource<{
 }
 
 
+type ResourceOutputs = {[key: string]: string};
 export class Resource extends BaseResource<{
   id: string;
   kind: string;
   isManuallyDeclared: boolean;
   inputs?: {[key: string]: string | string[]};
-  outputs?: {[key: string]: string};
+  outputs?: ResourceOutputs;
 }> {
   static create = getCreator(Resource, Resources);
 
@@ -100,9 +101,13 @@ export class Resource extends BaseResource<{
     return ResourceKinds.get(this.state.kind);
   }
 
+  get outputs(): ResourceOutputs {
+    return this.state.outputs ?? {};
+  }
+
   get isReady(): boolean {
     const kind = ResourceKinds.get(this.state.kind);
-    const outputs = this.state.outputs ?? {};
+    const outputs = this.outputs;
     if (!kind) return false;
     for (const key in kind.outputs) {
       if (outputs[key] === undefined) {
