@@ -1,6 +1,6 @@
 import { Handle, Node } from 'reactflow';
 import styles from "./Recipe.module.css";
-import { classnames } from '../../utils';
+import { classnames, getGlobalColor } from '../../utils';
 import { ReactNode } from 'react';
 
 
@@ -19,20 +19,18 @@ export function Recipe(props: RecipeProps) {
   
   return (
     <>
-      <div className={classnames(styles.root, getVariant(variant))} data-color={color}>
+      <div className={classnames(styles.root, getVariant(variant), getGlobalColor(color))}>
         {data.label}
       </div>
- 
       {props.sourcePosition ? <Handle type="source" position={props.sourcePosition} /> : null}
       {props.targetPosition ? <Handle type="target" position={props.targetPosition} /> : null}
-      
     </>
   );
 }
 
 Recipe.displayName = "Recipe";
 
-const getVariant = (scheme: string = "info") => {
+const getVariant = (scheme: string = "solid") => {
   return {
     solid: styles.solid,
     fancy: styles.fancy,

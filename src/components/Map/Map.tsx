@@ -1,44 +1,38 @@
 import styles from "./Map.module.css";
 import { useCallback, useState } from 'react';
-import ReactFlow, { Controls, OnConnect, OnEdgesChange, OnNodesChange, addEdge, applyEdgeChanges, applyNodeChanges } from 'reactflow';
+import ReactFlow, { Connection, Controls, Edge, EdgeChange, Node, NodeChange, addEdge, applyEdgeChanges, applyNodeChanges } from 'reactflow';
 import 'reactflow/dist/style.css';
 
 import { nodes as initialNodes} from "../../data/nodes"
 import { edges as initialEdges} from "../../data/edges"
 import { Recipe } from "../Recipe/Recipe";
 import { Step } from "../Step/Step";
+import ButtonStep from "../Step/ButtonStep";
 
 const nodeTypes = {
   recipeNode: Recipe
 }
 
 const edgeTypes = {
-  stepEdge: Step
+  stepEdge: Step,
+  buttonStep: ButtonStep
 }
 
 
 export function Map() {
-  // const { content, icon, variant = "info" } = props;
-
-  // return (
-  //   <div className={classnames(styles.root, getStyle(variant))}>
-  //     {<Icon wrapperClasses={styles.icon}>{icon}</Icon>}
-  //     {<div className={styles.content}>{content}</div>}
-  //   </div>
-  // );
-  const [nodes, setNodes] = useState(initialNodes);
-  const [edges, setEdges] = useState(initialEdges);
+  const [nodes, setNodes] = useState<Node[]>(initialNodes);
+  const [edges, setEdges] = useState<Edge[]>(initialEdges);
 
   const onNodesChange = useCallback(
-    (changes: OnNodesChange[]) => setNodes((nds: OnNodesChange) => applyNodeChanges(changes, nds)),
+    (changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)),
     [setNodes]
   );
   const onEdgesChange = useCallback(
-    (changes: OnEdgesChange[]) => setEdges((eds: OnEdgesChange) => applyEdgeChanges(changes, eds)),
+    (changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)),
     [setEdges]
   );
   const onConnect = useCallback(
-    (connection: OnConnect[]) => setEdges((eds: OnConnect) => addEdge(connection, eds)),
+    (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
     [setEdges]
   );
 
@@ -61,16 +55,4 @@ export function Map() {
 
 }
 
-
-
-
 Map.displayName = "Map";
-
-// const getStyle = (scheme: MapProps["variant"] = "info") => {
-//   return {
-//     info: styles.Map__info,
-//     danger: styles.Map__danger,
-//     warning: styles.Map__warning,
-//     success: styles.Map__success,
-//   }[scheme];
-// };

@@ -3,3 +3,8 @@ export const classnames = (
   ): string => {
     return classnames.filter(String).join(" ");
   };
+
+export const getGlobalColor = (color: string = "orange") => {
+  return `globalColor${color}`;
+};
+  
