@@ -1,14 +1,14 @@
 import { Resource, ResourceKinds, Resources } from "./resources";
-import { BezierEdgeStepProps } from "../components/Step/Step";
 import { RecipeProps } from "../components/Recipe/Recipe";
 import { Position } from "@reactflow/core";
+import { Edge } from "reactflow";
 
 
 export function expandGraph(resource: Resource) {
   const kind = ResourceKinds.get(resource.kind);
 
   const nodes: RecipeProps[] = [];
-  const edges: BezierEdgeStepProps[] = [];
+  const edges: Edge[] = [];
   nodes.push({
     id: resource.id,
     type: "recipeNode",

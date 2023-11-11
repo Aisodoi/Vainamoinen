@@ -92,11 +92,12 @@ export function Map() {
     [graph.nodes, graph.edges]
   );
 
+  // TODO: Replace any with proper types
   return (
     <ReactFlow
       nodes={nodes}
-      nodeTypes={nodeTypes}
-      edgeTypes={edgeTypes}
+      nodeTypes={nodeTypes as any}
+      edgeTypes={edgeTypes as any}
       edges={edges}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}

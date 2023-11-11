@@ -1,7 +1,6 @@
 import { Handle, Node } from 'reactflow';
 import styles from "./Recipe.module.css";
 import { classnames, getGlobalColor } from '../../utils';
-import { ReactNode } from 'react';
 
 
 export interface RecipeProps extends Node {
