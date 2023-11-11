@@ -17,39 +17,57 @@ function requireResource(kind: ResourceKind, name?: string, description?: string
 }
 
 export function initData() {
-  const StorageChoice = ResourceKind.create("Storage Choice");
-  const UiDesign = ResourceKind.create("UI Design", {}, {
-    designImage: { kind: "uri", description: "Reference Image" },
+  const StorageChoice = ResourceKind.create({name: "Storage Choice"});
+  const UiDesign = ResourceKind.create({
+    name: "UI Design",
+    outputs: {
+      designImage: {kind: "uri", description: "Reference Image"},
+    }
   });
 
-  const StorageApi = ResourceKind.create("Storage API", {
-    storageChoice: StorageChoice.require(),
-  }, {
-    outputs: { kind: "uri", description: "Storage API Docs" },
+  const StorageApi = ResourceKind.create({
+    name: "Storage API", requirements: {
+      storageChoice: StorageChoice.require(),
+    },
+    outputs: {
+      storageApiDocs: {kind: "uri", description: "Storage API Docs"},
+    }
   });
 
-  const Implementation = ResourceKind.create("Implementation", {
-    design: requireResource(UiDesign),
-    storage: requireResource(StorageApi),
+  const Implementation = ResourceKind.create({
+    name: "Implementation", requirements: {
+      design: requireResource(UiDesign),
+      storage: requireResource(StorageApi),
+    }
   });
 
-  const Feature = ResourceKind.create("Feature", {
-    implementation: requireResource(Implementation),
+  const Feature = ResourceKind.create({
+    name: "Feature", requirements: {
+      implementation: requireResource(Implementation),
+    }
   });
 
-  const Deployment = ResourceKind.create("Deployment");
-
-  const WebApp = ResourceKind.create("Web App", {
-    deployment: requireResource(Deployment),
-    features: requireResource(Feature, "Features", "The features for this app", true),
+  const Deployment = ResourceKind.create({
+    name: "Deployment"
   });
 
-  Resource.create(WebApp.id, {
-    "features": [
-      Resource.create(Feature.id, {}).id,
-      Resource.create(Feature.id, {}).id,
-      Resource.create(Feature.id, {}).id,
-      Resource.create(Feature.id, {}).id,
-    ],
-  })
+  const WebApp = ResourceKind.create({
+    name: "Web App",
+    requirements: {
+      deployment: requireResource(Deployment),
+      features: requireResource(Feature, "Features", "The features for this app", true),
+    }
+  });
+
+  Resource.create({
+    kind: WebApp.id,
+    inputs: {
+      "features": [
+        Resource.create({kind: Feature.id}).id,
+        Resource.create({kind: Feature.id}).id,
+        Resource.create({kind: Feature.id}).id,
+        Resource.create({kind: Feature.id}).id,
+      ],
+    }
+  });
 }

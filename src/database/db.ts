@@ -8,11 +8,11 @@ class Database {
     this.tables = new Map();
   }
 
-  declareTable<T>(name: string): Table<T> {
+  declareTable<T>(name: string, loader: (state: any) => T): Table<T> {
     if (this.tables.get(name)) {
       throw new Error(`Table with the name ${name} already exists!`);
     }
-    const table = new Table<T>(name);
+    const table = new Table<T>(name, loader);
     this.tables.set(name, table);
     return table;
   }

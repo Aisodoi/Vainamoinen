@@ -5,7 +5,7 @@ import { Edge } from "reactflow";
 
 
 export function expandGraph(resource: Resource) {
-  const kind = ResourceKinds.get(resource.kind);
+  const kind = ResourceKinds.get(resource.state.kind);
 
   const nodes: RecipeProps[] = [];
   const edges: Edge[] = [];
@@ -13,7 +13,7 @@ export function expandGraph(resource: Resource) {
     id: resource.id,
     type: "recipeNode",
     data: {
-      label: kind ? kind.name : resource.kind,
+      label: kind ? kind.state.name : resource.state.kind,
       variant: "fancy",
       color: "orange",
     },
@@ -29,17 +29,17 @@ export function expandGraph(resource: Resource) {
     };
   }
 
-  for (const reqSlot in kind.requirements) {
-    const requirement = kind.requirements[reqSlot];
+  for (const reqSlot in kind.state.requirements) {
+    const requirement = kind.state.requirements[reqSlot];
 
-    let inputId = resource.inputs[reqSlot];
+    let inputId = resource.state.inputs ? resource.state.inputs[reqSlot] : undefined;
 
     if (inputId === undefined) {
       console.log(`Missing: ${reqSlot}`);
       if (requirement.many) {
         inputId = [];
       } else {
-        inputId = Resource.create(requirement.kind, {}).id;
+        inputId = Resource.create({ kind: requirement.kind }).id;
       }
     } else {
       console.log(`Found: ${reqSlot}`);

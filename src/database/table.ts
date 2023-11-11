@@ -2,11 +2,13 @@
 
 export class Table<T> {
   name: string;
+  loader: (state: any) => T;
   cache: Map<string, T>;
 
-  constructor(name: string) {
+  constructor(name: string, loader: (state: any) => T) {
     this.name = name;
     this.cache = new Map();
+    this.loader = loader;
     this.load();
   }
 
@@ -25,7 +27,7 @@ export class Table<T> {
   load() {
     const saved = localStorage.getItem(this.name);
     if (!saved) return;
-    this.cache = new Map(JSON.parse(saved));
+    this.cache = new Map((JSON.parse(saved) as [string, object][]).map((x) => [x[0], this.loader(x[1])]));
   }
 
   save() {
