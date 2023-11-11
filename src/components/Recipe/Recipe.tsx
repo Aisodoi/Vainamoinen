@@ -12,17 +12,12 @@ export interface RecipeProps extends Node {
 export function Recipe(props: RecipeProps) {
   const resource = props.data;
 
-  const variant = "solid";
-
-  const bgOpacity = resource.state.isManuallyDeclared ? 0.8 : 0.3;
-  const borderstyle = resource.state.isManuallyDeclared ? "solid" : "dashed";
-  const bgColor = resource.isReady ? `rgba(0, 255, 0, ${bgOpacity})` : `rgba(255, 0, 0, ${bgOpacity})`;
-
   return (
-    <div className={classnames(styles.root, getVariant(variant))} style={{
-      backgroundColor: bgColor,
-      borderStyle: borderstyle,
-    }}>
+    <div className={classnames(
+      styles.root,
+      getStatusColor(resource.isReady ? "green" : "red"),
+      getBorderSolidity(resource.state.isManuallyDeclared ? "solid" : "dashed")
+      )}>
       <StepContent resource={resource} />
       {props.sourcePosition ? <Handle type="source" position={props.sourcePosition} /> : null}
       {props.targetPosition ? <Handle type="target" position={props.targetPosition} /> : null}
@@ -32,16 +27,16 @@ export function Recipe(props: RecipeProps) {
 
 Recipe.displayName = "Recipe";
 
-const getVariant = (scheme: string = "solid") => {
-  return {
-    solid: styles.solid,
-    fancy: styles.fancy,
-  }[scheme];
-};
-
 const getStatusColor = (scheme: string = "green") => {
   return {
     green: styles.green,
     red: styles.red,
+  }[scheme];
+};
+
+const getBorderSolidity = (scheme: string = "solid") => {
+  return {
+    solid: styles.solid,
+    dashed: styles.dashed,
   }[scheme];
 };
