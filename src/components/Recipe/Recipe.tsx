@@ -17,13 +17,13 @@ export function Recipe(props: RecipeProps) {
   const { variant = "solid", color } = props.data;
   
   return (
-    <>
-      <div className={classnames(styles.root, getVariant(variant), getGlobalColor(color))}>
+    <div className={classnames(styles.root, getVariant(variant), getGlobalColor(color))}>
+      <div className={styles.mystifier}>
         {data.label}
       </div>
       {props.sourcePosition ? <Handle type="source" position={props.sourcePosition} /> : null}
       {props.targetPosition ? <Handle type="target" position={props.targetPosition} /> : null}
-    </>
+    </div>
   );
 }
 

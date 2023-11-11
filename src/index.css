@@ -191,19 +191,27 @@ a:not([class]) {
   cursor: not-allowed;
 }
 
+body {
+  font: normal 16px inter, sans-serif;
+}
+
 #root {
   display: flex;
   width: 100vw;
   height: 100vh;
 }
 
-:root {
-  background: rgb(2,0,36);
-  background: -moz-linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(85,98,237,1) 0%, rgba(0,212,255,1) 96%);
-  background: -webkit-linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(85,98,237,1) 0%, rgba(0,212,255,1) 96%);
-  background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(85,98,237,1) 0%, rgba(0,212,255,1) 96%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#020024",endColorstr="#00d4ff",GradientType=1);
+@font-face {
+  font-weight: 100 1000;
+  font-family: Inter;
+  src: url("./Inter.ttf") format("truetype-variations");
+}
 
+:root {
+
+  background: linear-gradient(163deg, rgb(16 16 40) 60%, rgb(94 29 137 / 0.52) 82.71%, #d8acf4 147.31%);
+  background-color: rgb(0, 0, 0);
+  
   --color-black: rgb(0 0 0);
   --color-white: rgb(255 255 255);
   --color-purple--1: rgb(13 13 28);

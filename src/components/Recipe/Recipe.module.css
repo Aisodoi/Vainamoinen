@@ -14,7 +14,7 @@
     font-size: var(--font-size);
     line-height: 1;
     text-align: center;
-    background-color: var(--bg-color);
+    background: var(--bg-color);
     /* user-select: none; */
   
     --font-size: var(--space--12);
@@ -25,6 +25,7 @@
 }
 
 .root:hover {
+    transition: 210ms ease-in 0s;
     --bg-color: var(--color-5, var(--color-white));
 }
 
@@ -37,15 +38,14 @@
 }
 
 .root:where(.fancy) {
-    border: none;
-
-    --bg-color: var(--color-4);
-    --text-color: var(--color-9);
+    border: 2px solid #50D99F;
+    background: #102B20;
+    --text-color: #FFF;
 }
 
 .root:where(.fancy):hover {
     box-shadow:
-    inset 0 var(--space--px) 0 0 rgb(255 255 255 / 0.2),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.2),
     inset 0 0 var(--space--16) 0 var(--color-1),
     0 0 var(--space--10) 0 rgb(79 216 159 / 0.5);
 }
