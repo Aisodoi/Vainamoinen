@@ -96,6 +96,10 @@ export class Resource extends BaseResource<{
 }> {
   static create = getCreator(Resource, Resources);
 
+  get kind(): ResourceKind | undefined {
+    return ResourceKinds.get(this.state.kind);
+  }
+
   get isReady(): boolean {
     const kind = ResourceKinds.get(this.state.kind);
     const outputs = this.state.outputs ?? {};

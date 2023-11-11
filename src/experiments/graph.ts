@@ -12,11 +12,7 @@ export function expandGraph(resource: Resource) {
   nodes.push({
     id: resource.id,
     type: "recipeNode",
-    data: {
-      label: kind ? kind.state.name : resource.state.kind,
-      isReady: resource.isReady,
-      isManuallyDeclared: resource.state.isManuallyDeclared,
-    },
+    data: resource,
     position: { x: 0, y: 0 },
     sourcePosition: Position.Right,
     targetPosition: Position.Left,
