@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import ReactFlow, { Connection, ConnectionLineType, Edge, Panel, addEdge, useEdgesState, useNodesState } from 'reactflow';
+import ReactFlow, { Connection, ConnectionLineType, Edge, addEdge, useEdgesState, useNodesState } from 'reactflow';
 import 'reactflow/dist/style.css';
 
 import { Recipe } from "../Recipe/Recipe";

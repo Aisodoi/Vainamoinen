@@ -1,4 +1,5 @@
 import { LocalDatabase } from "../database/db";
+import { resetDb } from "../database/setup";
 
 function uuidv4() {
   return crypto.randomUUID();
@@ -27,16 +28,7 @@ type Output = {
 };
 type Outputs = {[key: string]: Output};
 
-
-function requireResource(kind: ResourceKind, name?: string, description?: string, many?: boolean) {
-  return {
-    kind: kind.id,
-    name: name,
-    description: description,
-  };
-}
-
-class ResourceKind {
+export class ResourceKind {
   id: string;
   name: string;
   requirements: Requirements;
@@ -85,41 +77,6 @@ export class Resource {
 }
 
 
-function initData() {
-  const StorageChoice = ResourceKind.create("Storage Choice");
-  const UiDesign = ResourceKind.create("UI Design");
-
-  const StorageApi = ResourceKind.create("Storage API", {
-    storageChoice: StorageChoice.require(),
-  });
-
-  const Implementation = ResourceKind.create("Implementation", {
-    design: requireResource(UiDesign),
-    storage: requireResource(StorageApi),
-  });
-
-  const Feature = ResourceKind.create("Feature", {
-    implementation: requireResource(Implementation),
-  });
-
-  const Deployment = ResourceKind.create("Deployment");
-
-  const WebApp = ResourceKind.create("Web App", {
-    deployment: requireResource(Deployment),
-    features: requireResource(Feature, "Features", "The features for this app", true),
-  });
-
-  const TodoApp = Resource.create(WebApp.id, {
-    "features": [
-      Resource.create(Feature.id, {}).id,
-      Resource.create(Feature.id, {}).id,
-      Resource.create(Feature.id, {}).id,
-      Resource.create(Feature.id, {}).id,
-    ],
-  })
-}
-
-
 const shouldReset = (
   localStorage.getItem("schemaVersion") !== SCHEMA_VERSION ||
   Resources.count === 0 ||
@@ -127,9 +84,7 @@ const shouldReset = (
 );
 
 if (shouldReset) {
-  console.log("Resetting database!");
-  LocalDatabase.clear();
-  initData();
+  resetDb();
 }
 
 const WebApp = ResourceKinds.filter((x) => x.name === "Web App")[0];
