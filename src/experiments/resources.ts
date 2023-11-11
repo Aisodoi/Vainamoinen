@@ -6,7 +6,7 @@ function uuidv4() {
 }
 
 
-const SCHEMA_VERSION = "2023-11-11 - 21:52"
+const SCHEMA_VERSION = "2023-11-11 - 22:43"
 
 
 export const ResourceKinds = LocalDatabase.declareTable<ResourceKind>("resourceKind");
@@ -61,16 +61,26 @@ export class Resource {
   id: string;
   kind: string;
   inputs: {[key: string]: string | string[]};
-  state: any;
+  outputs: {[key: string]: string};
 
-  constructor(id: string, kind: string, inputs: {[key: string]: string | string[]}) {
+  constructor(
+    id: string,
+    kind: string,
+    inputs: {[key: string]: string | string[]},
+    outputs: {[key: string]: string},
+  ) {
     this.id = id;
     this.kind = kind;
     this.inputs = inputs;
+    this.outputs = outputs;
   }
 
-  static create(kind: string, inputs: {[key: string]: string | string[]}): Resource {
-    const resource = new Resource(uuidv4(), kind, inputs);
+  static create(
+    kind: string,
+    inputs: {[key: string]: string | string[]},
+    outputs?: {[key: string]: string},
+  ): Resource {
+    const resource = new Resource(uuidv4(), kind, inputs, outputs ?? {});
     Resources.set(resource.id, resource);
     return resource;
   }
