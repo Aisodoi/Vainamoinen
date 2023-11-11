@@ -15,14 +15,13 @@ export type BezierEdgeStepProps<T = any> = Omit<WrapEdgeProps<T>, "type" | "mark
 
 export type CustomCSSProps = React.CSSProperties & {
   animation: string;
-  "stroke-dasharray": number;
 };
 
 
 
 const animationStuff: CustomCSSProps = {
   animation: 'dashdraw 0.2s linear infinite',
-  "stroke-dasharray": 5,
+  strokeDasharray: 5,
   stroke: "#eced55"
 }
 

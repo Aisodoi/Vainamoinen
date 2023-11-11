@@ -4,3 +4,13 @@
   align-items: center;
   gap: 4px;
 }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.button {
+  height: 20px;
+}

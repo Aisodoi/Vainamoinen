@@ -1,10 +1,10 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import ReactFlow, { Connection, ConnectionLineType, Edge, addEdge, useEdgesState, useNodesState } from 'reactflow';
 import 'reactflow/dist/style.css';
 
 import { Recipe } from "../Recipe/Recipe";
 import { Step } from "../Step/Step";
-import { TodoApp } from "../../experiments/resources";
+import { ResourceKinds, Resources } from "../../experiments/resources";
 import { expandGraph } from "../../experiments/graph";
 
 import dagre from "@dagrejs/dagre";
@@ -19,12 +19,14 @@ const edgeTypes = {
   stepEdge: Step,
 }
 
-const graph = expandGraph(TodoApp);
-
-console.log(graph);
-
 
 export function Map() {
+  const graph = useMemo(() => {
+    const WebApp = ResourceKinds.filter((x) => x.state.name === "Web App")[0];
+    const TodoApp = Resources.filter((x) => x.state.kind === WebApp.id)[0];
+    return expandGraph(TodoApp);
+  }, []);
+
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
   
@@ -103,6 +105,7 @@ export function Map() {
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
       connectionLineType={ConnectionLineType.SmoothStep}
+      proOptions={{ hideAttribution: true }}
       fitView
     />
   );

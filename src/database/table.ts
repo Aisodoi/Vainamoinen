@@ -1,6 +1,6 @@
 
 
-export class Table<T> {
+export class Table<T extends { state: any }> {
   name: string;
   loader: (state: any) => T;
   cache: Map<string, T>;
@@ -9,7 +9,6 @@ export class Table<T> {
     this.name = name;
     this.cache = new Map();
     this.loader = loader;
-    this.load();
   }
 
   get count(): number {
@@ -31,7 +30,7 @@ export class Table<T> {
   }
 
   save() {
-    const serialized = JSON.stringify(Array.from(this.cache));
+    const serialized = JSON.stringify(Array.from(this.cache).map(([x, y]) => [x, y.state]));
     localStorage.setItem(this.name, serialized);
   }
 
@@ -42,6 +41,7 @@ export class Table<T> {
 
   set(id: string, obj: T) {
     this.cache.set(id, obj);
+    this.save();
   }
 
   get(id: string): T | undefined {

@@ -31,7 +31,6 @@ export function expandGraph(resource: Resource) {
     let inputId = resource.state.inputs ? resource.state.inputs[reqSlot] : undefined;
 
     if (inputId === undefined) {
-      console.log(`Missing: ${reqSlot}`);
       if (requirement.many) {
         inputId = [];
       } else {

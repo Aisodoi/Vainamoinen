@@ -3,6 +3,7 @@ import { LocalDatabase } from "./db";
 
 
 export function resetDb() {
+  console.log("AAAAAAAAAAAAAAAAA");
   LocalDatabase.clear();
   initData();
 }

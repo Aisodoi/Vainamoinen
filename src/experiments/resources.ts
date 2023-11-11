@@ -6,7 +6,7 @@ function uuidv4() {
   return crypto.randomUUID();
 }
 
-const SCHEMA_VERSION = "2023-11-12 - 00:17"
+const SCHEMA_VERSION = "2023-11-12 - 01:23"
 
 export const ResourceKinds = LocalDatabase.declareTable(
   "resourceKind",
@@ -97,6 +97,14 @@ export class Resource extends BaseResource<{
 }> {
   static create = getCreator(Resource, Resources);
 
+  setOutput(field: string, value: string) {
+    if (!this.state.outputs) {
+      this.state.outputs = {};
+    }
+    this.state.outputs[field] = value;
+    Resources.save();
+  }
+
   get kind(): ResourceKind | undefined {
     return ResourceKinds.get(this.state.kind);
   }
@@ -119,6 +127,9 @@ export class Resource extends BaseResource<{
 }
 
 
+LocalDatabase.load();
+
+
 const shouldReset = (
   localStorage.getItem("schemaVersion") !== SCHEMA_VERSION ||
   Resources.count === 0 ||
@@ -126,8 +137,11 @@ const shouldReset = (
 );
 
 if (shouldReset) {
+  console.log(shouldReset);
+  console.log(localStorage.getItem("schemaVersion") !== SCHEMA_VERSION);
+  console.log(Resources.count === 0);
+  console.log(ResourceKinds.count === 0);
   resetDb();
+  localStorage.setItem("schemaVersion", SCHEMA_VERSION);
 }
 
-const WebApp = ResourceKinds.filter((x) => x.state.name === "Web App")[0];
-export const TodoApp = Resources.filter((x) => x.state.kind === WebApp.id)[0];
