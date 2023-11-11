@@ -35,10 +35,8 @@ export function expandGraph(resource: Resource) {
         inputId = [];
       } else {
         inputId = Resource.create({ kind: requirement.kind, isManuallyDeclared: false }).id;
+        resource.setInput(reqSlot, inputId);
       }
-    } else {
-      console.log(`Found: ${reqSlot}`);
-      console.log(inputId);
     }
 
     const inputIds = Array.isArray(inputId) ? inputId : [inputId];

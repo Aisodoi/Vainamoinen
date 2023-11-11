@@ -97,6 +97,14 @@ export class Resource extends BaseResource<{
 }> {
   static create = getCreator(Resource, Resources);
 
+  setInput(field: string, value: string | string[]) {
+    if (!this.state.inputs) {
+      this.state.inputs = {};
+    }
+    this.state.inputs[field] = value;
+    Resources.save();
+  }
+
   setOutput(field: string, value: string) {
     if (!this.state.outputs) {
       this.state.outputs = {};
