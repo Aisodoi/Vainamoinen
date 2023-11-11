@@ -1,4 +1,4 @@
-import { Position } from "reactflow";
+import { Position, getOutgoers } from "reactflow";
 
 export interface RawNodeProps {
     id: string;
@@ -8,7 +8,18 @@ export interface RawNodeProps {
 }
 
 export function parseNodes(rawData: RawNodeProps[]) {
-    const nodes = rawData.map((rd) => {
+
+    const tree = [];
+    const childOf = {};
+    rawData.forEach((item) => {
+        
+    });
+
+    const edges = rawData.map((rdr) => {
+        return 
+    })
+
+    const nodes = rawData.map((rdr) => {
         return {
             id: '1',
             type: 'recipeNode',
@@ -17,9 +28,22 @@ export function parseNodes(rawData: RawNodeProps[]) {
               variant: "fancy",
               color: "cool-green"
             },
-            position: { x: -250, y: 0 },
+            position: { x: 0, y: 0 },
             sourcePosition: Position.Right,
             targetPosition: Position.Left
         }
     })
 }
+
+
+const hierarchy = (rawData: RawNodeProps[]) => {
+    const tree = [];
+    const childOf = {};
+    rawData.forEach((item) => {
+        const { Id, Parent } = item;
+        childOf[Id] = childOf[Id] || [];
+        item.children = childOf[Id];
+        Parent ? (childOf[Parent] = childOf[Parent] || []).push(item) : tree.push(item);
+    });
+    return tree;
+};

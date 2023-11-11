@@ -1,42 +1,59 @@
-// import { Position } from "reactflow";
-// import { RecipeProps } from "../components/Recipe/Recipe";
-//
-// export const nodes: RecipeProps[] =  [
-//     {
-//       id: '1',
-//       type: 'recipeNode',
-//       data: {
-//         label: 'Input Node',
-//         variant: "fancy",
-//         color: "cool-green"
-//       },
-//       position: { x: -250, y: 0 },
-//       sourcePosition: Position.Right,
-//       targetPosition: Position.Left
-//     },
-//     {
-//       id: '2',
-//       type: 'recipeNode',
-//       // you can also pass a React component as a label
-//       data: {
-//         label: "Default Node",
-//         variant: "solid",
-//         color: "orange",
-//       },
-//       position: { x: 0, y: 0 },
-//       sourcePosition: Position.Right,
-//       targetPosition: Position.Left
-//     },
-//     {
-//       id: '3',
-//       type: 'recipeNode',
-//       data: {
-//         label: 'Output Node',
-//         variant: "fancy",
-//         color: "cool-green"
-//       },
-//       position: { x: 250, y: 0 },
-//       sourcePosition: Position.Right,
-//       targetPosition: Position.Left
-//     },
-//   ];
+import { RecipeProps } from "../components/Recipe/Recipe";
+
+const position = { x: 0, y: 0 };
+
+export const nodes: RecipeProps[] =  [
+  {
+    id: '1',
+    type: 'input',
+    data: { label: 'input' },
+    position,
+  },
+  {
+    id: '2',
+    data: { label: 'node 2' },
+    position,
+  },
+  {
+    id: '2a',
+    data: { label: 'node 2a' },
+    position,
+  },
+  {
+    id: '2b',
+    data: { label: 'node 2b' },
+    position,
+  },
+  {
+    id: '2c',
+    data: { label: 'node 2c' },
+    position,
+  },
+  {
+    id: '2d',
+    data: { label: 'node 2d' },
+    position,
+  },
+  {
+    id: '3',
+    data: { label: 'node 3' },
+    position,
+  },
+  {
+    id: '4',
+    data: { label: 'node 4' },
+    position,
+  },
+  {
+    id: '5',
+    data: { label: 'node 5' },
+    position,
+  },
+  {
+    id: '6',
+    type: 'output',
+    data: { label: 'output' },
+    position,
+  },
+  { id: '7', type: 'output', data: { label: 'output' }, position },
+];

@@ -6,7 +6,6 @@ import { ReactNode } from 'react';
 
 export interface RecipeProps extends Node {
   data: {
-    // [key: string]: ReactNode | string | boolean};
     label: string;
     variant?: "solid" | "fancy";
     color?: string;

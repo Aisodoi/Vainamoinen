@@ -2,7 +2,7 @@ import { Position, WrapEdgeProps, getBezierPath } from 'reactflow';
 import styles from "./Step.module.css";
 import { BaseEdge } from 'reactflow';
 
-export type BezierEdgeStepProps<T = any> = Omit<WrapEdgeProps<T>, "type"> & {
+export type BezierEdgeStepProps<T = any> = Omit<WrapEdgeProps<T>, "type" | "markerStart" | "markerEnd"> & {
   sourceX: number;
   sourceY: number;
   sourcePosition?: Position;
@@ -10,6 +10,8 @@ export type BezierEdgeStepProps<T = any> = Omit<WrapEdgeProps<T>, "type"> & {
   targetY: number;
   targetPosition?: Position;
   type: "default" | "stepEdge"
+  markerStart?: string;
+  markerEnd?: string;
 };
 
 
