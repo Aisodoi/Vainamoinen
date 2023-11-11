@@ -14,8 +14,7 @@ export function expandGraph(resource: Resource) {
     type: "recipeNode",
     data: {
       label: kind ? kind.state.name : resource.state.kind,
-      variant: "fancy",
-      color: "orange",
+      isReady: resource.isReady,
     },
     position: { x: 0, y: 0 },
     sourcePosition: Position.Right,

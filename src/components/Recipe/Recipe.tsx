@@ -6,20 +6,18 @@ import { classnames, getGlobalColor } from '../../utils';
 export interface RecipeProps extends Node {
   data: {
     label: string;
-    variant?: "solid" | "fancy";
-    color?: string;
+    isReady: boolean;
   }
 }
 
 export function Recipe(props: RecipeProps) {
   const { data } = props;
-  const { variant = "solid", color } = props.data;
+  const variant = "solid";
+  const color = "orange";
   
   return (
     <div className={classnames(styles.root, getVariant(variant), getGlobalColor(color))}>
-      <div className={styles.mystifier}>
-        {data.label}
-      </div>
+      <span>{data.label}</span>
       {props.sourcePosition ? <Handle type="source" position={props.sourcePosition} /> : null}
       {props.targetPosition ? <Handle type="target" position={props.targetPosition} /> : null}
     </div>

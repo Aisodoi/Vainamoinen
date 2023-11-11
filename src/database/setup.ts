@@ -7,15 +7,6 @@ export function resetDb() {
   initData();
 }
 
-
-function requireResource(kind: ResourceKind, name?: string, description?: string, many?: boolean) {
-  return {
-    kind: kind.id,
-    name: name,
-    description: description,
-  };
-}
-
 export function initData() {
   const StorageChoice = ResourceKind.create({name: "Storage Choice"});
   const UiDesign = ResourceKind.create({
@@ -36,14 +27,14 @@ export function initData() {
 
   const Implementation = ResourceKind.create({
     name: "Implementation", requirements: {
-      design: requireResource(UiDesign),
-      storage: requireResource(StorageApi),
+      design: UiDesign.require(),
+      storage: StorageApi.require(),
     }
   });
 
   const Feature = ResourceKind.create({
     name: "Feature", requirements: {
-      implementation: requireResource(Implementation),
+      implementation: Implementation.require(),
     }
   });
 
@@ -54,8 +45,8 @@ export function initData() {
   const WebApp = ResourceKind.create({
     name: "Web App",
     requirements: {
-      deployment: requireResource(Deployment),
-      features: requireResource(Feature, "Features", "The features for this app", true),
+      deployment: Deployment.require(),
+      features: Feature.require("Features", "The features for this app", true),
     }
   });
 

@@ -6,7 +6,7 @@ function uuidv4() {
   return crypto.randomUUID();
 }
 
-const SCHEMA_VERSION = "2023-11-11 - 23:56"
+const SCHEMA_VERSION = "2023-11-11 - 23:58"
 
 export const ResourceKinds = LocalDatabase.declareTable(
   "resourceKind",
@@ -75,6 +75,14 @@ export class ResourceKind extends BaseResource<{
     };
   }
 
+  get requirements() {
+    return this.state.requirements ?? {};
+  }
+
+  get outputs() {
+    return this.state.outputs ?? {};
+  }
+
   static create = getCreator(ResourceKind, ResourceKinds);
 }
 
@@ -86,6 +94,18 @@ export class Resource extends BaseResource<{
   outputs?: {[key: string]: string};
 }> {
   static create = getCreator(Resource, Resources);
+
+  get isReady(): boolean {
+    const kind = ResourceKinds.get(this.state.kind);
+    const outputs = this.state.outputs ?? {};
+    if (!kind) return false;
+    for (const key in kind.outputs) {
+      if (outputs[key] === undefined) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
 
 

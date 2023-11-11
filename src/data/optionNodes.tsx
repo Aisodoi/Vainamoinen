@@ -1,7 +1,6 @@
-import { Position } from "reactflow";
-import { RecipeProps } from "../components/Recipe/Recipe";
+import { Position, Node } from "reactflow";
 
-export const nodes: RecipeProps[] =  [
+export const nodes: Node[] =  [
     {
       id: '1',
       type: 'recipeNode',
@@ -40,4 +39,3 @@ export const nodes: RecipeProps[] =  [
       targetPosition: Position.Left
     },
   ];
-  
