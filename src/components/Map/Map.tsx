@@ -5,6 +5,17 @@ import 'reactflow/dist/style.css';
 
 import { nodes as initialNodes} from "../../data/nodes"
 import { edges as initialEdges} from "../../data/edges"
+import { Recipe } from "../Recipe/Recipe";
+import { Step } from "../Step/Step";
+
+const nodeTypes = {
+  recipeNode: Recipe
+}
+
+const edgeTypes = {
+  stepEdge: Step
+}
+
 
 export function Map() {
   // const { content, icon, variant = "info" } = props;
@@ -34,6 +45,8 @@ export function Map() {
   return (
     <div className={styles.root}>
       <ReactFlow
+        nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -61,36 +74,3 @@ Map.displayName = "Map";
 //     success: styles.Map__success,
 //   }[scheme];
 // };
-
-
-
-// function Flow() {
-//   const [nodes, setNodes] = useState(initialNodes);
-//   const [edges, setEdges] = useState(initialEdges);
-
-//   const onNodesChange = useCallback(
-//     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-//     [setNodes]
-//   );
-//   const onEdgesChange = useCallback(
-//     (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-//     [setEdges]
-//   );
-//   const onConnect = useCallback(
-//     (connection) => setEdges((eds) => addEdge(connection, eds)),
-//     [setEdges]
-//   );
-
-//   return (
-//     <ReactFlow
-//       nodes={nodes}
-//       edges={edges}
-//       onNodesChange={onNodesChange}
-//       onEdgesChange={onEdgesChange}
-//       onConnect={onConnect}
-//       fitView
-//     />
-//   );
-// }
-
-// export default Flow;
