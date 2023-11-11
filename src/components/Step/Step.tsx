@@ -13,6 +13,18 @@ export type BezierEdgeStepProps<T = any> = Omit<WrapEdgeProps<T>, "type" | "mark
   markerEnd?: string;
 };
 
+export type CustomCSSProps = React.CSSProperties & {
+  animation: string;
+  "stroke-dasharray": number;
+};
+
+
+
+const animationStuff: CustomCSSProps = {
+  animation: 'dashdraw 0.2s linear infinite',
+  "stroke-dasharray": 5,
+  stroke: "#eced55"
+}
 
 export function Step(props: BezierEdgeStepProps) {
   const { sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, ...restOfProps } = props;
@@ -26,7 +38,7 @@ export function Step(props: BezierEdgeStepProps) {
     targetPosition,
   });
 
-  const edgeElement = <BaseEdge path={edgePath} {...restOfProps}/>
+  const edgeElement = <BaseEdge path={edgePath} {...restOfProps} style={animationStuff}/>
   return edgeElement
 }
 

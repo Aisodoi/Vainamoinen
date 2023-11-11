@@ -294,11 +294,7 @@ body {
   --color-red--9: rgb(72 17 27);
   --color-red--10: rgb(48 11 18);
   --color-red--11: rgb(24 6 9);
-}
 
-
-
-:root {
   /* Base values */
   --space--px: 1px;
   --space--2: 0.125rem;
@@ -357,4 +353,16 @@ body {
   --font-weight-bold: 600;
   --font-weight-boldest: 700;
   --font-weight-heavy: 800;
+
+}
+
+@-webkit-keyframes dashdraw {
+  from {
+    stroke-dashoffset: 10;
+  }
+}
+@keyframes dashdraw {
+  from {
+    stroke-dashoffset: 10;
+  }
 }
