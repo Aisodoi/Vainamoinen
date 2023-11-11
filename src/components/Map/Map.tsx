@@ -28,7 +28,7 @@ export function Map() {
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
   
-  const nodeWidth = 172;
+  const nodeWidth = 215;
   const nodeHeight = 36;
   
   const getLayoutedElements = (nodes: any[], edges: any[], direction = 'LR') => {

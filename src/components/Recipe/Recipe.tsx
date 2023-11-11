@@ -38,3 +38,10 @@ const getVariant = (scheme: string = "solid") => {
     fancy: styles.fancy,
   }[scheme];
 };
+
+const getStatusColor = (scheme: string = "green") => {
+  return {
+    green: styles.green,
+    red: styles.red,
+  }[scheme];
+};
