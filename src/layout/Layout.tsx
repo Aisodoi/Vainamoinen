@@ -7,7 +7,7 @@ export const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <div className={styles.root}>
       <Navbar />
-      <div>{children}</div>
+      <div className={styles.content}>{children}</div>
     </div>
   );
 }
