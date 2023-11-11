@@ -15,6 +15,7 @@ export function expandGraph(resource: Resource) {
     data: {
       label: kind ? kind.state.name : resource.state.kind,
       isReady: resource.isReady,
+      isManuallyDeclared: resource.state.isManuallyDeclared,
     },
     position: { x: 0, y: 0 },
     sourcePosition: Position.Right,
@@ -38,7 +39,7 @@ export function expandGraph(resource: Resource) {
       if (requirement.many) {
         inputId = [];
       } else {
-        inputId = Resource.create({ kind: requirement.kind }).id;
+        inputId = Resource.create({ kind: requirement.kind, isManuallyDeclared: false }).id;
       }
     } else {
       console.log(`Found: ${reqSlot}`);

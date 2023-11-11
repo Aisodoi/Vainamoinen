@@ -7,6 +7,7 @@ export interface RecipeProps extends Node {
   data: {
     label: string;
     isReady: boolean;
+    isManuallyDeclared: boolean;
   }
 }
 
@@ -14,10 +15,15 @@ export function Recipe(props: RecipeProps) {
   const { data } = props;
   const variant = "solid";
 
-  const bgColor = data.isReady ? "green" : "red";
+  const bgOpacity = data.isManuallyDeclared ? 0.8 : 0.3;
+  const borderstyle = data.isManuallyDeclared ? "solid" : "dashed";
+  const bgColor = data.isReady ? `rgba(0, 255, 0, ${bgOpacity})` : `rgba(255, 0, 0, ${bgOpacity})`;
 
   return (
-    <div className={classnames(styles.root, getVariant(variant))} style={{ backgroundColor: bgColor }}>
+    <div className={classnames(styles.root, getVariant(variant))} style={{
+      backgroundColor: bgColor,
+      borderStyle: borderstyle,
+    }}>
       <span>{data.label}</span>
       {props.sourcePosition ? <Handle type="source" position={props.sourcePosition} /> : null}
       {props.targetPosition ? <Handle type="target" position={props.targetPosition} /> : null}

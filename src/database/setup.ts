@@ -54,11 +54,12 @@ export function initData() {
     kind: WebApp.id,
     inputs: {
       "features": [
-        Resource.create({kind: Feature.id}).id,
-        Resource.create({kind: Feature.id}).id,
-        Resource.create({kind: Feature.id}).id,
-        Resource.create({kind: Feature.id}).id,
+        Resource.create({kind: Feature.id, isManuallyDeclared: true}).id,
+        Resource.create({kind: Feature.id, isManuallyDeclared: true}).id,
+        Resource.create({kind: Feature.id, isManuallyDeclared: true}).id,
+        Resource.create({kind: Feature.id, isManuallyDeclared: true}).id,
       ],
-    }
+    },
+    isManuallyDeclared: true,
   });
 }

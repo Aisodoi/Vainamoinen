@@ -6,7 +6,7 @@ function uuidv4() {
   return crypto.randomUUID();
 }
 
-const SCHEMA_VERSION = "2023-11-11 - 23:58"
+const SCHEMA_VERSION = "2023-11-12 - 00:17"
 
 export const ResourceKinds = LocalDatabase.declareTable(
   "resourceKind",
@@ -90,6 +90,7 @@ export class ResourceKind extends BaseResource<{
 export class Resource extends BaseResource<{
   id: string;
   kind: string;
+  isManuallyDeclared: boolean;
   inputs?: {[key: string]: string | string[]};
   outputs?: {[key: string]: string};
 }> {
