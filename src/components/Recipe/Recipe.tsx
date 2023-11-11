@@ -18,7 +18,7 @@ export function Recipe(props: RecipeProps) {
 
   return (
     <div className={classnames(styles.root, getVariant(variant))} style={{ backgroundColor: bgColor }}>
-      <span>{data.label} - Ready: {data.isReady.toString()}</span>
+      <span>{data.label}</span>
       {props.sourcePosition ? <Handle type="source" position={props.sourcePosition} /> : null}
       {props.targetPosition ? <Handle type="target" position={props.targetPosition} /> : null}
     </div>
