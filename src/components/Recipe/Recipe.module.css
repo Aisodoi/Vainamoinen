@@ -22,6 +22,7 @@
     --bg-color: var(--color-white);
     --border-color: var(--color-black);
     --border-width: var(--space--2);
+    transition: 330ms ease-out 0s;
 }
 
 .root:hover {
