@@ -3,11 +3,11 @@ import { useCallback, useState } from 'react';
 import ReactFlow, { Connection, Controls, Edge, EdgeChange, Node, NodeChange, addEdge, applyEdgeChanges, applyNodeChanges } from 'reactflow';
 import 'reactflow/dist/style.css';
 
-import { nodes as initialNodes} from "../../data/nodes"
-import { edges as initialEdges} from "../../data/edges"
 import { Recipe } from "../Recipe/Recipe";
 import { Step } from "../Step/Step";
 import ButtonStep from "../Step/ButtonStep";
+import { TodoApp } from "../../experiments/resources";
+import { expandGraph } from "../../experiments/graph";
 
 const nodeTypes = {
   recipeNode: Recipe
@@ -18,10 +18,14 @@ const edgeTypes = {
   buttonStep: ButtonStep
 }
 
+const graph = expandGraph(TodoApp);
+
+console.log(graph);
+
 
 export function Map() {
-  const [nodes, setNodes] = useState<Node[]>(initialNodes);
-  const [edges, setEdges] = useState<Edge[]>(initialEdges);
+  const [nodes, setNodes] = useState<Node[]>(graph.nodes);
+  const [edges, setEdges] = useState<Edge[]>(graph.edges);
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)),
