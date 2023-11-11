@@ -48,7 +48,7 @@
 }
 
 .root:where(.red):hover {
-    --shadow-color-1: var(--color-cool-red--1);
+    --shadow-color-1: var(--color-red--1);
     --shadow-color-2: hsla(349, 87%, 67%, 0.502);
 }
 
