@@ -18,10 +18,14 @@ function requireResource(kind: ResourceKind, name?: string, description?: string
 
 export function initData() {
   const StorageChoice = ResourceKind.create("Storage Choice");
-  const UiDesign = ResourceKind.create("UI Design");
+  const UiDesign = ResourceKind.create("UI Design", {}, {
+    designImage: { kind: "uri", description: "Reference Image" },
+  });
 
   const StorageApi = ResourceKind.create("Storage API", {
     storageChoice: StorageChoice.require(),
+  }, {
+    outputs: { kind: "uri", description: "Storage API Docs" },
   });
 
   const Implementation = ResourceKind.create("Implementation", {

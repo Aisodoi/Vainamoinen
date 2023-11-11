@@ -5,13 +5,10 @@ function uuidv4() {
   return crypto.randomUUID();
 }
 
-
-const SCHEMA_VERSION = "2023-11-11 - 22:43"
-
+const SCHEMA_VERSION = "2023-11-11 - 22:56"
 
 export const ResourceKinds = LocalDatabase.declareTable<ResourceKind>("resourceKind");
 export const Resources = LocalDatabase.declareTable<Resource>("resource");
-
 
 type Requirement = {
   kind: string;
@@ -21,10 +18,9 @@ type Requirement = {
 }
 type Requirements = {[key: string]: Requirement}
 
-
 type Output = {
   description: string;
-  uri: string;
+  kind: "uri";
 };
 type Outputs = {[key: string]: Output};
 
