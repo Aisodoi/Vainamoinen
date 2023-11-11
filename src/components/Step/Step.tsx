@@ -1,5 +1,4 @@
 import { Position, WrapEdgeProps, getBezierPath } from 'reactflow';
-import styles from "./Step.module.css";
 import { BaseEdge } from 'reactflow';
 
 export type BezierEdgeStepProps<T = any> = Omit<WrapEdgeProps<T>, "type" | "markerStart" | "markerEnd"> & {
@@ -27,16 +26,8 @@ export function Step(props: BezierEdgeStepProps) {
     targetPosition,
   });
 
-  // TODO: Type problem
   const edgeElement = <BaseEdge path={edgePath} {...restOfProps}/>
   return edgeElement
 }
 
 Step.displayName = "Step";
-
-export const getEdgeVariant = (scheme: string = "solid") => {
-  return {
-    solid: styles.solid,
-    fancy: styles.fancy,
-  }[scheme];
-};
