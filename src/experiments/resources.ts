@@ -22,7 +22,8 @@ type Requirements = {[key: string]: Requirement}
 
 
 type Output = {
-  kind: string;
+  description: string;
+  uri: string;
 };
 type Outputs = {[key: string]: Output};
 
