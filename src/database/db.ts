@@ -19,7 +19,7 @@ class Database {
 
   clear() {
     console.log("Clearing database!");
-    for (const table of this.tables.values()) {
+    for (const table of Array.from(this.tables.values())) {
       table.clear();
     }
   }
