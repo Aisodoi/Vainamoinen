@@ -1,12 +1,15 @@
-import { Table } from "../database/table";
+import { LocalDatabase } from "../database/db";
 
 function uuidv4() {
   return crypto.randomUUID();
 }
 
 
-export const ResourceKinds = new Table<ResourceKind>("resourceKind");
-export const Resources = new Table<Resource>("resource");
+const SCHEMA_VERSION = "2023-11-11 - 21:52"
+
+
+export const ResourceKinds = LocalDatabase.declareTable<ResourceKind>("resourceKind");
+export const Resources = LocalDatabase.declareTable<Resource>("resource");
 
 
 type Requirement = {
@@ -16,6 +19,12 @@ type Requirement = {
   many?: boolean;
 }
 type Requirements = {[key: string]: Requirement}
+
+
+type Output = {
+  kind: string;
+};
+type Outputs = {[key: string]: Output};
 
 
 function requireResource(kind: ResourceKind, name?: string, description?: string, many?: boolean) {
@@ -30,11 +39,13 @@ class ResourceKind {
   id: string;
   name: string;
   requirements: Requirements;
+  outputs: Outputs;
 
-  constructor(id: string, name: string, staticRequirements: Requirements) {
+  constructor(id: string, name: string, staticRequirements: Requirements, outputs: Outputs) {
     this.id = id;
     this.name = name;
     this.requirements = staticRequirements;
+    this.outputs = outputs;
   }
 
   require(name?: string, description?: string, many?: boolean): Requirement {
@@ -45,8 +56,8 @@ class ResourceKind {
     };
   }
 
-  static create(name: string, requirements?: Requirements): ResourceKind {
-    const kind = new ResourceKind(uuidv4(), name, requirements ?? {});
+  static create(name: string, requirements?: Requirements, outputs?: Outputs): ResourceKind {
+    const kind = new ResourceKind(uuidv4(), name, requirements ?? {}, outputs ?? {});
     ResourceKinds.set(kind.id, kind);
     return kind;
   }
@@ -57,6 +68,7 @@ export class Resource {
   id: string;
   kind: string;
   inputs: {[key: string]: string | string[]};
+  state: any;
 
   constructor(id: string, kind: string, inputs: {[key: string]: string | string[]}) {
     this.id = id;
@@ -106,7 +118,16 @@ function initData() {
   })
 }
 
-if (Resources.count == 0) {
+
+const shouldReset = (
+  localStorage.getItem("schemaVersion") !== SCHEMA_VERSION ||
+  Resources.count === 0 ||
+  ResourceKinds.count === 0
+);
+
+if (shouldReset) {
+  console.log("Resetting database!");
+  LocalDatabase.clear();
   initData();
 }
 
