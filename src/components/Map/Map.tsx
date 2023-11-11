@@ -64,8 +64,8 @@ export function Map() {
   };
   
   const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
-    initialNodes,
-    initialEdges
+    graph.nodes,
+    graph.edges
   );
 
   const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
@@ -103,12 +103,7 @@ export function Map() {
       onConnect={onConnect}
       connectionLineType={ConnectionLineType.SmoothStep}
       fitView
-    >
-      <Panel position="top-right">
-        <button onClick={() => onLayout('TB')}>vertical layout</button>
-        <button onClick={() => onLayout('LR')}>horizontal layout</button>
-      </Panel>
-    </ReactFlow>
+    />
   );
 
 }
