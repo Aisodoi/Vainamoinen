@@ -2,12 +2,16 @@ import React from 'react';
 import './App.css';
 import { Map } from './components/Map/Map';
 import { Layout } from "./layout/Layout";
+import * as Toast from '@radix-ui/react-toast';
 
 function App() {
   return (
-    <Layout>
-      <Map />
-    </Layout>
+    <Toast.Provider swipeDirection="right">
+      <Layout>
+        <Map />
+      </Layout>
+      <Toast.Viewport className="ToastViewport" />
+    </Toast.Provider>
   );
 }
 
