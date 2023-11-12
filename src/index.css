@@ -207,6 +207,12 @@ body {
   src: url("./Inter.ttf") format("truetype-variations");
 }
 
+@font-face {
+  font-weight: 100 1000;
+  font-family: Goblin;
+  src: url("./goblin.ttf") format("truetype-variations");
+}
+
 :root {
 
   background: linear-gradient(163deg, rgb(16 16 40) 60%, rgb(94 29 137 / 0.52) 82.71%, #d8acf4 147.31%);
@@ -468,6 +474,7 @@ button {
 .iconButton {
   width: 1em;
   height: 1em;
+  position: relative;
 }
 
 .iconButton > svg {

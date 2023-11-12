@@ -9,3 +9,12 @@
   width: 100%;
   flex: 1;
 }
+
+.logo {
+  font: normal 32px goblin, sans-serif;
+  position: absolute;
+  right: 12px;
+  top: -1px;
+  z-index: 5;
+  color: rgb(236, 237, 85);
+}

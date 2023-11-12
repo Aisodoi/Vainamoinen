@@ -20,7 +20,7 @@ export type CustomCSSProps = React.CSSProperties & {
 
 
 const animationStuff: CustomCSSProps = {
-  // animation: 'dashdraw 0.2s linear infinite',
+  animation: 'dashdraw 0.2s linear infinite',
   strokeDasharray: 5,
   stroke: "#eced55"
 }

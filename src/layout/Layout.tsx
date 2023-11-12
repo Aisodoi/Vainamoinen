@@ -34,6 +34,7 @@ export const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <div className={styles.root}>
       <Navbar />
+      <span className={styles.logo}>Puzzles</span>
       <ErrorBoundary>
         <div className={styles.content}>{children}</div>
       </ErrorBoundary>

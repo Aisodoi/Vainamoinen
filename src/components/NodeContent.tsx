@@ -13,7 +13,6 @@ export const ResourceValSetter: React.FC<{ resource: Resource, field: string }> 
 
   return (
     <div>
-      {/* <button className="iconButton" onClick={() => setShowModal(true)}><Edit/></button> */}
       <KikkulaModal
         isVisible={showModal}
         saveOnClick={() => {
