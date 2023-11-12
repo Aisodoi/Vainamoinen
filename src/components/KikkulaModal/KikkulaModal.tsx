@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactNode, cloneElement } from "react";
+import React, { PropsWithChildren, ReactNode, cloneElement, useMemo } from "react";
 import styles from "./KikkulaModal.module.css";
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross } from "../../svgs";
@@ -13,26 +13,27 @@ type KikkulaModalProps = {
   saveOnClick: () => void;
 }
 
-function addClasses(element: JSX.Element, classesToAdd: string) {
+function addClasses(element: JSX.Element, classesToAdd: string, key: string) {
   return cloneElement(element, {
     className: classnames(
       element.props.className,
       classesToAdd,
     ),
-  })
+    key: key,
+  });
 }
 
 export const KikkulaModal: React.FC<PropsWithChildren<KikkulaModalProps>> = (props) => {
-
-  const fieldSets = props.inputs.map(x => {
-    return (
-      <fieldset className={styles.Fieldset}>
-        {addClasses(x.label, styles.Label)}
-        {addClasses(x.input, styles.Input)}
-      </fieldset>
-    )
-    
-  });
+  const fieldSets = useMemo(() => {
+    return props.inputs.map(x => {
+      return (
+        <fieldset className={styles.Fieldset}>
+          {addClasses(x.label, styles.Label, "label")}
+          {addClasses(x.input, styles.Input, "input")}
+        </fieldset>
+      )
+    });
+  }, [props.inputs]);
 
   return (
     <Dialog.Root>
@@ -46,9 +47,7 @@ export const KikkulaModal: React.FC<PropsWithChildren<KikkulaModalProps>> = (pro
           <Dialog.Description className={styles.DialogDescription}>
             {props.description}
           </Dialog.Description>
-          <fieldset className={styles.Fieldset}>
-            {fieldSets}
-          </fieldset>
+          {fieldSets}
           <div style={{ display: 'flex', marginTop: 25, justifyContent: 'flex-end' }}>
             <Dialog.Close asChild>
               <button className={classnames(styles.Button, styles.green)} onClick={props.saveOnClick}>Save changes</button>

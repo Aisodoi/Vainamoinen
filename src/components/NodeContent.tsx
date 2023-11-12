@@ -14,16 +14,33 @@ export const ResourceValSetter: React.FC<{ resource: Resource, field: string }> 
       <KikkulaModal
         isVisible={showModal}
         saveOnClick={() => {
-            if (!inputRef.current) return;
-            resource.setOutput(field, inputRef.current.value);
-          }}
+          if (!inputRef.current) return;
+          resource.setOutput(field, inputRef.current.value);
+        }}
         title={"Edit Resource"}
-        description={"Here you can edit a resource, to auto generate new paths."}
+        description={"a"}
         inputs={[{label: <label htmlFor="resouce">Resource</label>, input: <input id="resource" type={"text"} ref={inputRef}/>}]}
         trigger={<div className="iconButton" ><Edit/></div>}
         >
       </KikkulaModal>
     </div>
+  );
+}
+
+const OutTable: React.FC<{ output: string | string[] }> = ({ output }) => {
+  if (!Array.isArray(output)) {
+    return <>output</>;
+  }
+  return (
+    <table>
+      <tbody>
+      {output.map((val, idx) => (
+        <tr key={idx}>
+          <td>{val}</td>
+        </tr>
+      ))}
+      </tbody>
+    </table>
   );
 }
 
@@ -42,7 +59,7 @@ export const StepContent: React.FC<StepContentProps> = ({ resource }) => {
           return (
             <tr key={k}>
               <td>{k}</td>
-              <td>{outVal}</td>
+              <td><OutTable output={outVal} /></td>
               <td>
                 <ResourceValSetter resource={resource} field={k} />
               </td>
