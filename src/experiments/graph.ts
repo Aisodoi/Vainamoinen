@@ -33,6 +33,11 @@ export function expandGraph(resource: Resource) {
     if (inputId === undefined) {
       if (requirement.many) {
         inputId = [];
+        for (let i = 0; i < (requirement.minCount ?? 0); i++) {
+          const res = Resource.create({ kind: requirement.kind, isManuallyDeclared: false }).id;
+          inputId.push(res);
+        }
+        resource.setInput(reqSlot, inputId);
       } else {
         inputId = Resource.create({ kind: requirement.kind, isManuallyDeclared: false }).id;
         resource.setInput(reqSlot, inputId);

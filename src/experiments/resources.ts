@@ -6,7 +6,7 @@ function uuidv4() {
   return crypto.randomUUID();
 }
 
-const SCHEMA_VERSION = "2023-11-12 - 02:21"
+const SCHEMA_VERSION = "2023-11-12 - 03:24"
 
 export const ResourceKinds = LocalDatabase.declareTable(
   "resourceKind",
@@ -26,6 +26,7 @@ type Requirement = {
   name?: string;
   description?: string;
   many?: boolean;
+  minCount?: number;
 }
 type Requirements = {[key: string]: Requirement}
 
@@ -72,12 +73,10 @@ export class ResourceKind extends BaseResource<{
   requirements?: Requirements;
   outputs?: Outputs;
 }> {
-  require(name?: string, description?: string, many?: boolean): Requirement {
+  require(opts?: Omit<Requirement, "kind">): Requirement {
     return {
-      kind: this.state.id,
-      name: name,
-      description: description,
-      many: many,
+      ...opts,
+      kind: this.id,
     };
   }
 

@@ -66,7 +66,10 @@ export function initData() {
     name: "Feature",
     type: "step",
     requirements: {
-      implementation: Implementation.require(),
+      implementation: Implementation.require({
+        many: true,
+        minCount: 1,
+      }),
     },
   });
 
@@ -80,7 +83,12 @@ export function initData() {
     type: "step", // TODO: Change to (sub)graph
     requirements: {
       deployment: Deployment.require(),
-      features: Feature.require("Features", "The features for this app", true),
+      features: Feature.require({
+        name: "Features",
+        description: "The features for this app",
+        many: true,
+        minCount: 1,
+      }),
     },
   });
 
