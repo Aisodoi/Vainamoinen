@@ -3,52 +3,85 @@ import { LocalDatabase } from "./db";
 
 
 export function resetDb() {
-  console.log("AAAAAAAAAAAAAAAAA");
   LocalDatabase.clear();
   initData();
 }
 
 export function initData() {
-  const StorageChoice = ResourceKind.create({name: "Storage Choice"});
+  const StorageChoice = ResourceKind.create({
+    name: "Storage Choice",
+    type: "step",
+  });
   const UiDesign = ResourceKind.create({
     name: "UI Design",
+    type: "step",
     outputs: {
-      designImage: {kind: "uri", description: "Reference Image"},
-    }
+      designImage: {
+        kind: "uri",
+        description: "Reference Image",
+        many: false,
+      },
+    },
   });
+  const UiComponents = ResourceKind.create({
+    name: "Component Breakdown",
+    type: "step",
+    outputs: {
+      components: {
+        kind: "uri",
+        description: "Break down designs to individual components",
+        many: true,
+      },
+    },
+    requirements: {
+      design: UiDesign.require(),
+    },
+  })
 
   const StorageApi = ResourceKind.create({
-    name: "Storage API", requirements: {
+    name: "Storage API",
+    type: "step",
+    requirements: {
       storageChoice: StorageChoice.require(),
     },
     outputs: {
-      storageApiDocs: {kind: "uri", description: "Storage API Docs"},
-    }
+      storageApiDocs: {
+        kind: "uri",
+        description: "Storage API Docs",
+        many: false,
+      },
+    },
   });
 
   const Implementation = ResourceKind.create({
-    name: "Implementation", requirements: {
-      design: UiDesign.require(),
+    name: "Implementation",
+    type: "subgraph",
+    requirements: {
+      components: UiComponents.require(),
       storage: StorageApi.require(),
-    }
+    },
   });
 
   const Feature = ResourceKind.create({
-    name: "Feature", requirements: {
+    name: "Feature",
+    type: "step",
+    requirements: {
       implementation: Implementation.require(),
-    }
+    },
   });
 
   const Deployment = ResourceKind.create({
-    name: "Deployment"
+    name: "Deployment",
+    type: "step",
   });
 
   const WebApp = ResourceKind.create({
     name: "Web App",
+    type: "step", // TODO: Change to (sub)graph
     requirements: {
       deployment: Deployment.require(),
       features: Feature.require("Features", "The features for this app", true),
-    }
+    },
   });
 
   Resource.create({

@@ -6,7 +6,7 @@ function uuidv4() {
   return crypto.randomUUID();
 }
 
-const SCHEMA_VERSION = "2023-11-12 - 01:23"
+const SCHEMA_VERSION = "2023-11-12 - 02:21"
 
 export const ResourceKinds = LocalDatabase.declareTable(
   "resourceKind",
@@ -16,6 +16,10 @@ export const Resources = LocalDatabase.declareTable(
   "resource",
   (state) => new Resource(state),
 );
+// export const Edges = LocalDatabase.declareTable(
+//   "edges",
+//   (state) => new Edge(state),
+// );
 
 type Requirement = {
   kind: string;
@@ -28,6 +32,7 @@ type Requirements = {[key: string]: Requirement}
 type Output = {
   description: string;
   kind: "uri";
+  many: boolean;
 };
 type Outputs = {[key: string]: Output};
 
@@ -63,6 +68,7 @@ class BaseResource<State extends BaseState> {
 export class ResourceKind extends BaseResource<{
   id: string;
   name: string;
+  type: "step" | "subgraph";
   requirements?: Requirements;
   outputs?: Outputs;
 }> {
@@ -73,6 +79,9 @@ export class ResourceKind extends BaseResource<{
       description: description,
       many: many,
     };
+  }
+
+  registerHandler(handle: () => {}) {
   }
 
   get requirements() {
@@ -87,12 +96,17 @@ export class ResourceKind extends BaseResource<{
 }
 
 
-type ResourceOutputs = {[key: string]: string};
+type ResourceId = string;
+type DataUri = string;
+
+
+type ResourceInputs = {[key: string]: ResourceId | ResourceId[]};
+type ResourceOutputs = {[key: string]: DataUri | DataUri[]};
 export class Resource extends BaseResource<{
   id: string;
   kind: string;
   isManuallyDeclared: boolean;
-  inputs?: {[key: string]: string | string[]};
+  inputs?: ResourceInputs;
   outputs?: ResourceOutputs;
 }> {
   static create = getCreator(Resource, Resources);
@@ -105,7 +119,7 @@ export class Resource extends BaseResource<{
     Resources.save();
   }
 
-  setOutput(field: string, value: string) {
+  setOutput(field: string, value: string | string[]) {
     if (!this.state.outputs) {
       this.state.outputs = {};
     }
@@ -121,6 +135,32 @@ export class Resource extends BaseResource<{
     return this.state.outputs ?? {};
   }
 
+  get inputs(): ResourceInputs {
+    return this.state.inputs ?? {};
+  }
+
+  get hasRequirements(): boolean {
+    const kind = ResourceKinds.get(this.state.kind);
+    const inputs = this.inputs;
+    if (!kind) return false;
+    for (const key in kind.requirements) {
+      let inputResIds = inputs[key]
+      if (inputResIds === undefined) {
+        return false;
+      }
+      if (!Array.isArray(inputResIds)) {
+        inputResIds = [inputResIds];
+      }
+      for (const resId of inputResIds) {
+        const inputRes = Resources.get(resId);
+        if (!inputRes || !inputRes.isReady) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   get isReady(): boolean {
     const kind = ResourceKinds.get(this.state.kind);
     const outputs = this.outputs;
@@ -133,6 +173,13 @@ export class Resource extends BaseResource<{
     return true;
   }
 }
+// export class Edge extends BaseResource<{
+//   id: string;
+//   source: string;
+//   target: string;
+// }> {
+//   static create = getCreator(ResourceKind, ResourceKinds);
+// }
 
 
 LocalDatabase.load();
@@ -145,11 +192,6 @@ const shouldReset = (
 );
 
 if (shouldReset) {
-  console.log(shouldReset);
-  console.log(localStorage.getItem("schemaVersion") !== SCHEMA_VERSION);
-  console.log(Resources.count === 0);
-  console.log(ResourceKinds.count === 0);
   resetDb();
   localStorage.setItem("schemaVersion", SCHEMA_VERSION);
 }
-
