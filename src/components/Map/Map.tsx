@@ -1,8 +1,8 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import ReactFlow, { Connection, ConnectionLineType, Edge, addEdge, useEdgesState, useNodesState } from 'reactflow';
 import 'reactflow/dist/style.css';
 
-import { Recipe, RecipeProps } from "../Recipe/Recipe";
+import { Recipe } from "../Recipe/Recipe";
 import { Step } from "../Step/Step";
 import { ResourceKinds, Resources } from "../../experiments/resources";
 import { expandGraph } from "../../experiments/graph";
