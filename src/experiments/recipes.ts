@@ -6,7 +6,7 @@ import { buildLeft } from "./graph";
 function updateStep(resource: Resource) {
   if (!resource.hasRequirements) return;
   switch (resource.kind?.state.name) {
-    case "Component Spec":
+    case "Component Breakdown":
       resource.setOutput([
         {"component": "Component 1"},
         {"component": "Component 2"},

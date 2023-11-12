@@ -24,7 +24,7 @@ export function initData() {
     },
   });
   const ComponentSpec = ResourceKind.create({
-    name: "Component Spec",
+    name: "Component Breakdown",
     type: "step",
     requirements: {
       design: UiDesign.require(),
