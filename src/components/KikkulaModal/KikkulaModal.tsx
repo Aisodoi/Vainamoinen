@@ -25,9 +25,9 @@ function addClasses(element: JSX.Element, classesToAdd: string, key: string) {
 
 export const KikkulaModal: React.FC<PropsWithChildren<KikkulaModalProps>> = (props) => {
   const fieldSets = useMemo(() => {
-    return props.inputs.map(x => {
+    return props.inputs.map((x, idx) => {
       return (
-        <fieldset className={styles.Fieldset}>
+        <fieldset className={styles.Fieldset} key={idx}>
           {addClasses(x.label, styles.Label, "label")}
           {addClasses(x.input, styles.Input, "input")}
         </fieldset>
