@@ -51,16 +51,12 @@ export function updateGraph() {
     entry.setInput(newInputs);
   }
 
-  console.log(deletedResources);
-
   // Connect splits to the closest merger
   for (const entry of Resources.filter(x => x.outputs.length > 1)) {
     for (const parentId of entry.state.context) {
       const parent = Resources.get(parentId);
-      console.log(parent?.kind);
       if (!parent || parent.kind?.state.type !== "mergele") continue;
       buildLeft(parent, entry.outputs.length, entry);
-      console.log("Called mergele build");
       break;
     }
   }

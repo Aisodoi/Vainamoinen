@@ -8,10 +8,10 @@ export function resetDb() {
 }
 
 export function initData() {
-  const StorageChoice = ResourceKind.create({
-    name: "Storage Choice",
-    type: "step",
-  });
+  // const StorageChoice = ResourceKind.create({
+  //   name: "Storage Choice",
+  //   type: "step",
+  // });
   const UiDesign = ResourceKind.create({
     name: "UI Design",
     type: "step",
@@ -41,9 +41,9 @@ export function initData() {
   const StorageApi = ResourceKind.create({
     name: "Storage API",
     type: "step",
-    requirements: {
-      storageChoice: StorageChoice.require(),
-    },
+    // requirements: {
+    //   storageChoice: StorageChoice.require(),
+    // },
     outputs: {
       storageApiDocs: {
         kind: "uri",
@@ -90,7 +90,6 @@ export function initData() {
     type: "mergele",
     requirements: {
       implementation: ViewImplementation.require(),
-
     },
   });
 
@@ -117,9 +116,9 @@ export function initData() {
     context: [],
   });
   TodoApp.setInput([
-    { feature: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id },
-    { feature: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id },
-    { feature: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id },
-    { feature: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id },
+    { features: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id },
+    { features: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id },
+    { features: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id },
+    { features: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id },
   ]);
 }

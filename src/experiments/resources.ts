@@ -186,8 +186,10 @@ export class Resource extends BaseResource<{
     const outputs = this.outputs;
     if (!kind) return false;
     for (const key in kind.outputs) {
-      if (outputs[0][key] === undefined) {
-        return false;
+      for (const entry of outputs) {
+        if (entry[key] === undefined) {
+          return false;
+        }
       }
     }
     return true;

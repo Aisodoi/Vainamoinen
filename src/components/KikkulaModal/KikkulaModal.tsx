@@ -8,7 +8,7 @@ type KikkulaModalProps = {
   isVisible: boolean;
   trigger: ReactNode;
   title: JSX.Element | string;
-  description: JSX.Element | string;
+  description?: JSX.Element | string;
   inputs: {input: JSX.Element; label: JSX.Element}[];
   saveOnClick: () => void;
 }
@@ -44,9 +44,9 @@ export const KikkulaModal: React.FC<PropsWithChildren<KikkulaModalProps>> = (pro
         <Dialog.Overlay className={styles.DialogOverlay} />
         <Dialog.Content className={styles.DialogContent}>
           <Dialog.Title className={styles.DialogTitle}>{props.title}</Dialog.Title>
-          <Dialog.Description className={styles.DialogDescription}>
+          {props.description && <Dialog.Description className={styles.DialogDescription}>
             {props.description}
-          </Dialog.Description>
+          </Dialog.Description>}
           {fieldSets}
           <div style={{ display: 'flex', marginTop: 25, justifyContent: 'flex-end' }}>
             <Dialog.Close asChild>

@@ -34,7 +34,10 @@ export const RunStepButton: React.FC = () => {
     <>
       <button className={styles.navButtonNeutral} onClick={() => {
         setOpen(false);
-        updateGraph()
+        // lol
+        for (let i = 0; i < 6; i++) {
+          updateGraph();
+        }
         setOpen(true);
       }}>
         Run step

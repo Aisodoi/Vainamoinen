@@ -24,7 +24,16 @@ export function Map() {
   const graph = useMemo(() => {
     const WebApp = ResourceKinds.filter((x) => x.state.name === "Web App")[0];
     const TodoApp = Resources.filter((x) => x.state.kind === WebApp.id)[0];
-    return expandGraph(TodoApp);
+    const gr = expandGraph(TodoApp);
+    const ids = new Set();
+    for (const edge of gr.nodes) {
+      if (ids.has(edge.id)) {
+        console.log(`Dupe ID: ${edge.id}`);
+      } else {
+        ids.add(edge.id);
+      }
+    }
+    return gr;
   }, []);
   
   const getLayoutedElements = useCallback((nodes: any[], edges: any[], direction = 'LR') => {

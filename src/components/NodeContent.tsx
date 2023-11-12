@@ -19,10 +19,8 @@ export const ResourceValSetter: React.FC<{ resource: Resource, field: string }> 
           const res: any = {};
           res[field] = inputRef.current.value;
           resource.setOutput([res]);
-          console.log(resource);
         }}
         title={"Edit Resource"}
-        description={"a"}
         inputs={[{label: <label htmlFor="resouce">Resource</label>, input: <input id="resource" type={"text"} ref={inputRef}/>}]}
         trigger={<div className="iconButton" ><Edit/></div>}
         >

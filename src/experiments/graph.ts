@@ -1,4 +1,4 @@
-import { Resource, ResourceInputs, ResourceKind, ResourceKinds, Resources } from "./resources";
+import { Resource, ResourceInputs, ResourceKinds, Resources } from "./resources";
 import { RecipeProps } from "../components/Recipe/Recipe";
 import { Position } from "@reactflow/core";
 import { Edge } from "reactflow";
@@ -81,9 +81,7 @@ export function buildLeft(
         if (requirement.kind === untilLinked.state.kind) {
           inRes = untilLinked;
           matched = true;
-          console.log("Matched!");
         } else {
-          console.log("Didn't match...");
           inRes = createChildOrLinkOrphan(resource, requirement.kind);
         }
       }
@@ -98,19 +96,26 @@ export function buildLeft(
 }
 
 
-export function expandGraph(resource: Resource) {
+export function expandGraph(resource: Resource, usedIds?: Set<string>) {
+  if (!usedIds) {
+    usedIds = new Set<string>();
+  }
   const kind = ResourceKinds.get(resource.state.kind);
 
   const nodes: RecipeProps[] = [];
   const edges: Edge[] = [];
-  nodes.push({
-    id: resource.id,
-    type: "recipeNode",
-    data: resource,
-    position: { x: 0, y: 0 },
-    sourcePosition: Position.Right,
-    targetPosition: Position.Left,
-  });
+
+  if (!usedIds.has(resource.id)) {
+    nodes.push({
+      id: resource.id,
+      type: "recipeNode",
+      data: resource,
+      position: {x: 0, y: 0},
+      sourcePosition: Position.Right,
+      targetPosition: Position.Left,
+    });
+    usedIds.add(resource.id);
+  }
 
   if (!kind) {
     return {
@@ -127,17 +132,21 @@ export function expandGraph(resource: Resource) {
       let inRes = Resources.get(currentGroup[reqSlot]);
       if (!inRes) {
         inRes = createChildOrLinkOrphan(resource, requirement.kind);
+        currentGroup[reqSlot] = inRes.id;
       }
-      currentGroup[reqSlot] = inRes.id;
 
-      edges.push({
-        id: `${inRes.id}-${resource.id}`,
-        source: inRes.id,
-        target: resource.id,
-        type: "stepEdge",
-      });
+      const edgeId = `${inRes.id}-${resource.id}`;
+      if (!usedIds.has(edgeId)) {
+        edges.push({
+          id: edgeId,
+          source: inRes.id,
+          target: resource.id,
+          type: "stepEdge",
+        });
+        usedIds.add(edgeId);
+      }
 
-      const inpGraph = expandGraph(inRes);
+      const inpGraph = expandGraph(inRes, usedIds);
       nodes.push(...inpGraph.nodes);
       edges.push(...inpGraph.edges);
     }
