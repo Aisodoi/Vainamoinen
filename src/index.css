@@ -465,6 +465,17 @@ button {
   fill: var(--color-white);
 }
 
+.iconButton {
+  width: 1em;
+  height: 1em;
+}
+
+.iconButton > svg {
+  width: 1em;
+  height: 1em;
+  fill: var(--color-white)
+}
+
 @keyframes hide {
   from {
     opacity: 1;

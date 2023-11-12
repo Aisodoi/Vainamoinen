@@ -2,24 +2,28 @@ import React, { useState, useRef } from "react";
 import { Resource } from "../experiments/resources";
 import styles from "./NodeContent.module.css";
 import { KikkulaModal } from "./KikkulaModal/KikkulaModal";
+import { Edit } from "../svgs";
 
 export const ResourceValSetter: React.FC<{ resource: Resource, field: string }> = ({ resource, field }) => {
   const [showModal, setShowModal] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <>
-      <KikkulaModal isVisible={showModal} dismiss={() => setShowModal(false)}>
-        <div className={styles.form}>
-          <input type={"text"} ref={inputRef}/>
-          <button className={styles.button} onClick={() => {
+    <div>
+      {/* <button className="iconButton" onClick={() => setShowModal(true)}><Edit/></button> */}
+      <KikkulaModal
+        isVisible={showModal}
+        saveOnClick={() => {
             if (!inputRef.current) return;
             resource.setOutput(field, inputRef.current.value);
-          }}>Save</button>
-        </div>
+          }}
+        title={"Edit Resource"}
+        description={"Here you can edit a resource, to auto generate new paths."}
+        inputs={[{label: <label htmlFor="resouce">Resource</label>, input: <input id="resource" type={"text"} ref={inputRef}/>}]}
+        trigger={<div className="iconButton" ><Edit/></div>}
+        >
       </KikkulaModal>
-      <button style={{ color: "black" }} onClick={() => setShowModal(true)}>Set</button>
-    </>
+    </div>
   );
 }
 
