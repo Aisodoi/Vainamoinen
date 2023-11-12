@@ -4,15 +4,19 @@ import { resetDb } from "../database/setup";
 import * as Toast from '@radix-ui/react-toast';
 import { Cross } from "../svgs";
 import { updateGraph } from "../experiments/recipes";
+import { GraphRefreshContext } from "../GraphContext";
 
 
 export const ResetDbButton: React.FC = () => {
+  const { refresh } = React.useContext(GraphRefreshContext);
+
   const [open, setOpen] = React.useState(false);
   return (
     <>
       <button className={styles.navButton} onClick={() => {
         setOpen(false);
-        resetDb()
+        resetDb();
+        refresh();
         setOpen(true);
       }}>
         Reset database
@@ -29,15 +33,15 @@ export const ResetDbButton: React.FC = () => {
 }
 
 export const RunStepButton: React.FC = () => {
+  const { refresh } = React.useContext(GraphRefreshContext);
   const [open, setOpen] = React.useState(false);
   return (
     <>
       <button className={styles.navButtonNeutral} onClick={() => {
         setOpen(false);
         // lol
-        for (let i = 0; i < 6; i++) {
-          updateGraph();
-        }
+        updateGraph();
+        refresh();
         setOpen(true);
       }}>
         Run step

@@ -1,8 +1,8 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import ReactFlow, { Connection, ConnectionLineType, Edge, addEdge, useEdgesState, useNodesState } from 'reactflow';
 import 'reactflow/dist/style.css';
 
-import { Recipe } from "../Recipe/Recipe";
+import { Recipe, RecipeProps } from "../Recipe/Recipe";
 import { Step } from "../Step/Step";
 import { ResourceKinds, Resources } from "../../experiments/resources";
 import { expandGraph } from "../../experiments/graph";
@@ -10,6 +10,7 @@ import { expandGraph } from "../../experiments/graph";
 import dagre from "@dagrejs/dagre";
 
 import 'reactflow/dist/style.css';
+import { GraphRefreshContext } from "../../GraphContext";
 
 const nodeTypes = {
   recipeNode: Recipe
@@ -21,7 +22,10 @@ const edgeTypes = {
 
 
 export function Map() {
+  const { state } = useContext(GraphRefreshContext);
+  const [graphS, setGraphS] = useState<{ edges: Edge[], nodes: RecipeProps[] }>({ edges: [], nodes: [] });
   const graph = useMemo(() => {
+    console.log(state);
     const WebApp = ResourceKinds.filter((x) => x.state.name === "Web App")[0];
     const TodoApp = Resources.filter((x) => x.state.kind === WebApp.id)[0];
     const gr = expandGraph(TodoApp);
@@ -34,7 +38,11 @@ export function Map() {
       }
     }
     return gr;
-  }, []);
+  }, [state]);
+
+  useEffect(() => {
+    setGraphS({ edges: graph.edges, nodes: graph.nodes });
+  }, [graph.edges, graph.nodes])
   
   const getLayoutedElements = useCallback((nodes: any[], edges: any[], direction = 'LR') => {
 
@@ -71,12 +79,12 @@ export function Map() {
     });
   
     return { nodes, edges };
-  }, []);
+  }, [state]);
   
   const { nodes: layoutedNodes, edges: layoutedEdges } = useMemo(() => getLayoutedElements(
     graph.nodes,
     graph.edges
-  ), [getLayoutedElements, graph]);
+  ), [getLayoutedElements, graph.edges, graph.nodes]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
@@ -99,16 +107,17 @@ export function Map() {
       setNodes([...layoutedNodes]);
       setEdges([...layoutedEdges]);
     },
-    [graph.nodes, graph.edges]
+    [edges, nodes, setEdges, setNodes, getLayoutedElements]
   );
 
   // TODO: Replace any with proper types
   return (
     <ReactFlow
-      nodes={nodes}
+      key={state}
+      nodes={graph.nodes}
       nodeTypes={nodeTypes as any}
       edgeTypes={edgeTypes as any}
-      edges={edges}
+      edges={graph.edges}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}

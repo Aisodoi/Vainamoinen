@@ -38,26 +38,6 @@ function createChildOrLinkOrphan(resource: Resource, kind: string): Resource {
   }
 }
 
-
-// function findClosestSplit(resource: Resource, parents?: Resource[]): [Resource, Resource[]] | undefined {
-//   for (const inpField in resource.inputs) {
-//     for (const inpResId of resource.inputs[inpField] ?? []) {
-//       const inpRes = Resources.get(inpResId);
-//       if (!inpRes) continue;
-//       if (inpRes.outputs.length > 1) {
-//         return [inpRes, parents ?? []];
-//       }
-//     }
-//   }
-//   for (const inpField in resource.inputs) {
-//     for (const inpResId of resource.inputs[inpField] ?? []) {
-//       const inpRes = Resources.get(inpResId);
-//       if (!inpRes) continue;
-//       return findClosestSplit(inpRes, [resource, ...(parents ?? [])]);
-//     }
-//   }
-// }
-
 export function buildLeft(
   resource: Resource,
   minGroups: number,

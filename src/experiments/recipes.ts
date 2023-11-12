@@ -27,6 +27,12 @@ function updateStep(resource: Resource) {
 }
 
 export function updateGraph() {
+  for (let i = 0; i < 6; i++) {
+    _updateGraph();
+  }
+}
+
+function _updateGraph() {
   for (const entry of Resources.cache.values()) {
     updateStep(entry);
   }
