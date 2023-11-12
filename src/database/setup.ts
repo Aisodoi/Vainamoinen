@@ -74,6 +74,13 @@ export function initData() {
     requirements: {
       components: ComponentImplementation.require(),
     },
+    outputs: {
+      componentLibrary: {
+        kind: "uri",
+        description: "Component library",
+        many: false,
+      },
+    },
   })
 
   const ViewImplementation = ResourceKind.create({
@@ -83,6 +90,12 @@ export function initData() {
       components: ComponentLibrary.require(),
       storage: StorageApi.require(),
     },
+    outputs: {
+      viewImplementation: {
+      kind: "uri",
+      description: "View implementation",
+      many: false,
+    }}
   });
 
   const Feature = ResourceKind.create({
@@ -90,6 +103,13 @@ export function initData() {
     type: "mergele",
     requirements: {
       implementation: ViewImplementation.require(),
+    },
+    outputs: {
+      feature: {
+        kind: "uri",
+        description: "Feature",
+        many: false,
+      },
     },
   });
 
@@ -116,9 +136,9 @@ export function initData() {
     context: [],
   });
   TodoApp.setInput([
-    { features: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id },
-    { features: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id },
-    { features: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id },
-    { features: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id },
+    { features: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id], name: "Profile view"}).id },
+    { features: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id], name: "Todo list"}).id },
+    { features: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id], name: "Settings view"}).id },
+    { features: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id], name: "Terms of Service"}).id },
   ]);
 }

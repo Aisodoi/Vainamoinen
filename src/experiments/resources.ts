@@ -6,7 +6,7 @@ function uuidv4() {
   return crypto.randomUUID();
 }
 
-const SCHEMA_VERSION = "2023-11-12 - 07:00"
+const SCHEMA_VERSION = "2023-11-12 - 09:37"
 
 export const ResourceKinds = LocalDatabase.declareTable(
   "resourceKind",
@@ -107,8 +107,13 @@ export class Resource extends BaseResource<{
   inputs?: ResourceInputs;
   outputs?: ResourceOutputs;
   context: string[];
+  name?: string;
 }> {
   static create = getCreator(Resource, Resources);
+
+  get name() {
+    return this.state.name ?? this.kind?.state.name ?? this.state.kind;
+  }
 
   setInput(value: ResourceInputs) {
     this.state.inputs = value;

@@ -63,7 +63,7 @@ export const StepContent: React.FC<StepContentProps> = ({ resource }) => {
 
   return (
     <div className={styles.root}>
-      <span>{resource.kind?.state.name ?? resource.state.kind}</span>
+      <span>{resource.name}</span>
       {/*<table>*/}
       {/*  <tbody>*/}
       {/*  {resource.outputs.map((o, idx) => {*/}

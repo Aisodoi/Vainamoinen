@@ -52,6 +52,16 @@
     --shadow-color-2: hsla(349, 87%, 67%, 0.502);
 }
 
+.root:where(.ghost) {
+    --bg-color: rgba(153, 153, 153, 0.2);
+    --border-color: rgba(0, 0, 0, 0.2);
+}
+
+.root:where(.ghost):hover {
+    --bg-color: rgba(153, 153, 153, 0.6);
+    --border-color: rgba(53, 53, 53, 0.8);
+}
+
 .root:where(.solid) {
     border-style: solid;
 }
