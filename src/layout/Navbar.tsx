@@ -47,7 +47,7 @@ export const RunStepButton: React.FC = () => {
         Update graph
       </button>
       <Toast.Root className="ToastRoot green" open={open} onOpenChange={setOpen}>
-        <Toast.Title className="ToastTitle">Step was run</Toast.Title>
+        <Toast.Title className="ToastTitle">Update graph</Toast.Title>
         <Toast.Close className="ToastClose">
           <Cross />
         </Toast.Close>
