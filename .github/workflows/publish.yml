@@ -19,7 +19,7 @@ jobs:
       - name: Build
         run: |
           yarn install --frozen-lockfile
-          DISABLE_ESLINT_PLUGIN=true yarn run build
+          DISABLE_ESLINT_PLUGIN=true PUBLIC_URL="." yarn run build
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v1
         with:
