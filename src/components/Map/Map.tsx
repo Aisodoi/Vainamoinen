@@ -26,14 +26,13 @@ export function Map() {
     const TodoApp = Resources.filter((x) => x.state.kind === WebApp.id)[0];
     return expandGraph(TodoApp);
   }, []);
+  
+  const getLayoutedElements = useCallback((nodes: any[], edges: any[], direction = 'LR') => {
 
-  const dagreGraph = new dagre.graphlib.Graph();
-  dagreGraph.setDefaultEdgeLabel(() => ({}));
-  
-  const nodeWidth = 215;
-  const nodeHeight = 36;
-  
-  const getLayoutedElements = (nodes: any[], edges: any[], direction = 'LR') => {
+    const nodeWidth = 215;
+    const nodeHeight = 36;
+    const dagreGraph = new dagre.graphlib.Graph();
+    dagreGraph.setDefaultEdgeLabel(() => ({}));
     const isHorizontal = direction === 'LR';
     dagreGraph.setGraph({ rankdir: direction });
   
@@ -63,12 +62,12 @@ export function Map() {
     });
   
     return { nodes, edges };
-  };
+  }, []);
   
-  const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+  const { nodes: layoutedNodes, edges: layoutedEdges } = useMemo(() => getLayoutedElements(
     graph.nodes,
     graph.edges
-  );
+  ), [getLayoutedElements, graph]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);

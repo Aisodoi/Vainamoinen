@@ -1,8 +1,12 @@
 import { Resource, Resources } from "./resources";
 
 
+function updateImplementation(resource: Resource) {
+}
+
+
 // TODO: Find a better way to bind recipes to steps
-function executeStep(resource: Resource) {
+function updateStep(resource: Resource) {
   if (!resource.hasRequirements) return;
   switch (resource.kind?.state.name) {
     case "Component Breakdown":
@@ -12,12 +16,14 @@ function executeStep(resource: Resource) {
         "component 3",
       ]);
       break;
+    case "Implementation":
+      break;
   }
 }
 
 
 export function updateGraph() {
   for (const entry of Resources.cache.values()) {
-    executeStep(entry);
+    updateStep(entry);
   }
 }
