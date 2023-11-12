@@ -5,7 +5,6 @@ import { Cross } from "../../svgs";
 import { classnames } from "../../utils";
 
 type KikkulaModalProps = {
-  isVisible: boolean;
   trigger: ReactNode;
   title: JSX.Element | string;
   description?: JSX.Element | string;

@@ -8,13 +8,11 @@ import { GraphRefreshContext } from "../GraphContext";
 
 export const ResourceValSetter: React.FC<{ resource: Resource, field: string }> = ({ resource, field }) => {
   const { refresh } = React.useContext(GraphRefreshContext);
-  const [showModal, setShowModal] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div>
       <KikkulaModal
-        isVisible={showModal}
         saveOnClick={() => {
           if (!inputRef.current) return;
           // TODO: Make support multiple fields; don't override entire thing
