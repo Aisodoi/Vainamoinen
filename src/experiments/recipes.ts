@@ -6,14 +6,21 @@ function updateStep(resource: Resource) {
   if (!resource.hasRequirements) return;
   switch (resource.kind?.state.name) {
     case "Component Breakdown":
-      resource.setOutput("components", [
-        "component 1",
-        "component 2",
-        "component 3",
+      resource.setOutput([
+        {"component": "Component 1"},
+        {"component": "Component 2"},
+        {"component": "Component 3"},
       ]);
       break;
     case "Implementation":
-      break;
+      for (let inp in resource.inputs) {
+        const inpRes = Resources.get(inp);
+        if (!inpRes) continue;
+
+        for (let out in resource.outputs) {
+
+        }
+      }
   }
 }
 

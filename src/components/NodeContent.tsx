@@ -15,7 +15,11 @@ export const ResourceValSetter: React.FC<{ resource: Resource, field: string }> 
         isVisible={showModal}
         saveOnClick={() => {
           if (!inputRef.current) return;
-          resource.setOutput(field, inputRef.current.value);
+          // TODO: Make support multiple fields; don't override entire thing
+          const res: any = {};
+          res[field] = inputRef.current.value;
+          resource.setOutput([res]);
+          console.log(resource);
         }}
         title={"Edit Resource"}
         description={"a"}
@@ -27,16 +31,19 @@ export const ResourceValSetter: React.FC<{ resource: Resource, field: string }> 
   );
 }
 
-const OutTable: React.FC<{ output: string | string[] }> = ({ output }) => {
+const OutTable: React.FC<{ resource: Resource, output: {[key: string]: string}  }> = ({ output, resource }) => {
+  const outputs = resource.kind?.outputs ?? {};
+
   if (!Array.isArray(output)) {
     return <>output</>;
   }
   return (
     <table>
       <tbody>
-      {output.map((val, idx) => (
-        <tr key={idx}>
-          <td>{val}</td>
+      {Object.keys(outputs).map((k,) => (
+        <tr key={k}>
+          <td>{k}</td>
+          <td>{output[k]}</td>
         </tr>
       ))}
       </tbody>
@@ -49,25 +56,24 @@ type StepContentProps = {
 }
 export const StepContent: React.FC<StepContentProps> = ({ resource }) => {
   const outputs = resource.kind?.outputs ?? {};
+
   return (
     <div className={styles.root}>
       <span>{resource.kind?.state.name ?? resource.state.kind}</span>
       <table>
         <tbody>
-        {Object.keys(outputs).map((k) => {
-          const outVal = resource.outputs[k];
+        {resource.outputs.map((o, idx) => {
           return (
-            <tr key={k}>
-              <td>{k}</td>
-              <td><OutTable output={outVal} /></td>
-              <td>
-                <ResourceValSetter resource={resource} field={k} />
-              </td>
+            <tr key={idx}>
+              <td><OutTable output={o} resource={resource} /></td>
             </tr>
           );
         })}
         </tbody>
       </table>
+      {Object.keys(outputs).map((k) => {
+        return <ResourceValSetter key={k} resource={resource} field={k} />;
+      })}
     </div>
   );
 };

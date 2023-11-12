@@ -27,7 +27,7 @@ export function initData() {
     name: "Component Breakdown",
     type: "step",
     outputs: {
-      components: {
+      component: {
         kind: "uri",
         description: "Break down designs to individual components",
         many: true,

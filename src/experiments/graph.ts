@@ -63,19 +63,13 @@ export function expandGraph(resource: Resource) {
   for (const reqSlot in kind.state.requirements) {
     const requirement = kind.state.requirements[reqSlot];
 
-    let inputId = resource.state.inputs ? resource.state.inputs[reqSlot] : undefined;
+    let inputId = resource.state.inputs ? resource.state.inputs[reqSlot] ?? [] : [];
 
-    if (inputId === undefined || (Array.isArray(inputId) && inputId.length < (requirement.minCount ?? 0))) {
-      if (requirement.many) {
-        inputId = inputId ?? [];
-        for (let i = inputId.length; i < (requirement.minCount ?? 0); i++) {
-          inputId.push(createChildOrLinkOrphan(resource, requirement.kind).id);
-        }
-        resource.setInput(reqSlot, inputId);
-      } else {
-        inputId = createChildOrLinkOrphan(resource, requirement.kind).id;
-        resource.setInput(reqSlot, inputId);
+    if (inputId.length < (requirement.minCount ?? 1)) {
+      for (let i = inputId.length; i < (requirement.minCount ?? 1); i++) {
+        inputId.push(createChildOrLinkOrphan(resource, requirement.kind).id);
       }
+      resource.setInput(reqSlot, inputId);
     }
 
     const inputIds = Array.isArray(inputId) ? inputId : [inputId];

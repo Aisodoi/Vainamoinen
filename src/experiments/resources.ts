@@ -6,7 +6,7 @@ function uuidv4() {
   return crypto.randomUUID();
 }
 
-const SCHEMA_VERSION = "2023-11-12 - 03:24"
+const SCHEMA_VERSION = "2023-11-12 - 04:54"
 
 export const ResourceKinds = LocalDatabase.declareTable(
   "resourceKind",
@@ -99,8 +99,8 @@ type ResourceId = string;
 type DataUri = string;
 
 
-type ResourceInputs = {[key: string]: ResourceId | ResourceId[] | undefined};
-type ResourceOutputs = {[key: string]: DataUri | DataUri[]};
+type ResourceInputs = {[key: string]: ResourceId[] | undefined};
+type ResourceOutputs = {[key: string]: DataUri}[];
 export class Resource extends BaseResource<{
   id: string;
   kind: string;
@@ -111,7 +111,7 @@ export class Resource extends BaseResource<{
 }> {
   static create = getCreator(Resource, Resources);
 
-  setInput(field: string, value: string | string[] | undefined) {
+  setInput(field: string, value: string[] | undefined) {
     if (!this.state.inputs) {
       this.state.inputs = {};
     }
@@ -119,11 +119,8 @@ export class Resource extends BaseResource<{
     Resources.save();
   }
 
-  setOutput(field: string, value: string | string[]) {
-    if (!this.state.outputs) {
-      this.state.outputs = {};
-    }
-    this.state.outputs[field] = value;
+  setOutput(value: ResourceOutputs) {
+    this.state.outputs = value;
     Resources.save();
   }
 
@@ -137,7 +134,7 @@ export class Resource extends BaseResource<{
   }
 
   get outputs(): ResourceOutputs {
-    return this.state.outputs ?? {};
+    return this.state.outputs ?? [{}];
   }
 
   get inputs(): ResourceInputs {
@@ -170,12 +167,16 @@ export class Resource extends BaseResource<{
     return !this.state.isManuallyDeclared && Object.keys(this.outputs ?? {}).length === 0;
   }
 
-  get isOrphan(): boolean {
-    if (this.state.context.length === 0) {
-      return false;
+  get parent(): Resource | undefined {
+    if (this.state.context.length === 0)  {
+      return undefined;
     } else {
-      return !Resources.get(this.state.context[0]);
+      return Resources.get(this.state.context[0]);
     }
+  }
+
+  get isOrphan(): boolean {
+    return !!this.parent;
   }
 
   get isReady(): boolean {
@@ -183,7 +184,7 @@ export class Resource extends BaseResource<{
     const outputs = this.outputs;
     if (!kind) return false;
     for (const key in kind.outputs) {
-      if (outputs[key] === undefined) {
+      if (outputs[0][key] === undefined) {
         return false;
       }
     }
