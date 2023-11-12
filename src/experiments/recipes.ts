@@ -1,11 +1,12 @@
-import { Resource, Resources } from "./resources";
+import { InputGroup, Resource, ResourceInputs, Resources } from "./resources";
+import { buildLeft } from "./graph";
 
 
 // TODO: Find a better way to bind recipes to steps
 function updateStep(resource: Resource) {
   if (!resource.hasRequirements) return;
   switch (resource.kind?.state.name) {
-    case "Component Breakdown":
+    case "Component Spec":
       resource.setOutput([
         {"component": "Component 1"},
         {"component": "Component 2"},
@@ -13,14 +14,15 @@ function updateStep(resource: Resource) {
       ]);
       break;
     case "Implementation":
-      for (let inp in resource.inputs) {
-        const inpRes = Resources.get(inp);
-        if (!inpRes) continue;
-
-        for (let out in resource.outputs) {
-
-        }
-      }
+      // for (let inp in resource.inputs) {
+      //   const inpRes = Resources.get(inp);
+      //   if (!inpRes) continue;
+      //
+      //   for (let out in resource.outputs) {
+      //
+      //   }
+      // }
+      break;
   }
 }
 
@@ -36,16 +38,30 @@ export function updateGraph() {
   }
 
   for (const entry of Resources.cache.values()) {
-    for (let key in entry.inputs) {
-      let val = entry.inputs[key];
-      if (!val) continue;
-      if (Array.isArray(val)) {
-        entry.setInput(key, val.filter((x) => !deletedResources.has(x)))
-      } else {
-        if (deletedResources.has(val)) {
-          entry.setInput(key, undefined);
-        }
+    const newInputs: ResourceInputs = [];
+    for (const group of entry.inputs) {
+      const newGroup: InputGroup = {};
+      for (let key in group) {
+        let val = group[key];
+        if (!val || deletedResources.has(val)) continue;
+        newGroup[key] = val;
       }
+      newInputs.push(newGroup);
+    }
+    entry.setInput(newInputs);
+  }
+
+  console.log(deletedResources);
+
+  // Connect splits to the closest merger
+  for (const entry of Resources.filter(x => x.outputs.length > 1)) {
+    for (const parentId of entry.state.context) {
+      const parent = Resources.get(parentId);
+      console.log(parent?.kind);
+      if (!parent || parent.kind?.state.type !== "mergele") continue;
+      buildLeft(parent, entry.outputs.length, entry);
+      console.log("Called mergele build");
+      break;
     }
   }
 }

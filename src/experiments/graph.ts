@@ -1,4 +1,4 @@
-import { Resource, ResourceKinds, Resources } from "./resources";
+import { Resource, ResourceInputs, ResourceKind, ResourceKinds, Resources } from "./resources";
 import { RecipeProps } from "../components/Recipe/Recipe";
 import { Position } from "@reactflow/core";
 import { Edge } from "reactflow";
@@ -39,6 +39,65 @@ function createChildOrLinkOrphan(resource: Resource, kind: string): Resource {
 }
 
 
+// function findClosestSplit(resource: Resource, parents?: Resource[]): [Resource, Resource[]] | undefined {
+//   for (const inpField in resource.inputs) {
+//     for (const inpResId of resource.inputs[inpField] ?? []) {
+//       const inpRes = Resources.get(inpResId);
+//       if (!inpRes) continue;
+//       if (inpRes.outputs.length > 1) {
+//         return [inpRes, parents ?? []];
+//       }
+//     }
+//   }
+//   for (const inpField in resource.inputs) {
+//     for (const inpResId of resource.inputs[inpField] ?? []) {
+//       const inpRes = Resources.get(inpResId);
+//       if (!inpRes) continue;
+//       return findClosestSplit(inpRes, [resource, ...(parents ?? [])]);
+//     }
+//   }
+// }
+
+export function buildLeft(
+  resource: Resource,
+  minGroups: number,
+  untilLinked: Resource,
+) {
+  const kind = ResourceKinds.get(resource.state.kind);
+
+  if (!kind) {
+    return;
+  }
+
+  const newInputs: ResourceInputs = [];
+  for (let groupIndex = 0; groupIndex < (minGroups ?? 1); groupIndex++) {
+    const currentGroup = resource.inputs[groupIndex] ?? [{}];
+    for (const reqSlot in kind.state.requirements) {
+      const requirement = kind.state.requirements[reqSlot];
+
+      let matched = false;
+      let inRes = Resources.get(currentGroup[reqSlot]);
+      if (!inRes) {
+        if (requirement.kind === untilLinked.state.kind) {
+          inRes = untilLinked;
+          matched = true;
+          console.log("Matched!");
+        } else {
+          console.log("Didn't match...");
+          inRes = createChildOrLinkOrphan(resource, requirement.kind);
+        }
+      }
+      currentGroup[reqSlot] = inRes.id;
+      if (!matched) {
+        buildLeft(inRes, 1, untilLinked);
+      }
+    }
+    newInputs.push(currentGroup);
+  }
+  resource.setInput(newInputs);
+}
+
+
 export function expandGraph(resource: Resource) {
   const kind = ResourceKinds.get(resource.state.kind);
 
@@ -60,27 +119,20 @@ export function expandGraph(resource: Resource) {
     };
   }
 
-  for (const reqSlot in kind.state.requirements) {
-    const requirement = kind.state.requirements[reqSlot];
+  const newInputs: ResourceInputs = [];
+  for (const currentGroup of resource.inputs) {
+    for (const reqSlot in kind.state.requirements) {
+      const requirement = kind.state.requirements[reqSlot];
 
-    let inputId = resource.state.inputs ? resource.state.inputs[reqSlot] ?? [] : [];
-
-    if (inputId.length < (requirement.minCount ?? 1)) {
-      for (let i = inputId.length; i < (requirement.minCount ?? 1); i++) {
-        inputId.push(createChildOrLinkOrphan(resource, requirement.kind).id);
+      let inRes = Resources.get(currentGroup[reqSlot]);
+      if (!inRes) {
+        inRes = createChildOrLinkOrphan(resource, requirement.kind);
       }
-      resource.setInput(reqSlot, inputId);
-    }
-
-    const inputIds = Array.isArray(inputId) ? inputId : [inputId];
-
-    for (const inId of inputIds) {
-      const inRes = Resources.get(inId);
-      if (!inRes) continue;
+      currentGroup[reqSlot] = inRes.id;
 
       edges.push({
-        id: `${inId}-${resource.id}`,
-        source: inId,
+        id: `${inRes.id}-${resource.id}`,
+        source: inRes.id,
         target: resource.id,
         type: "stepEdge",
       });
@@ -89,7 +141,10 @@ export function expandGraph(resource: Resource) {
       nodes.push(...inpGraph.nodes);
       edges.push(...inpGraph.edges);
     }
+    newInputs.push(currentGroup);
   }
+
+  resource.setInput(newInputs);
 
   return {
     nodes,

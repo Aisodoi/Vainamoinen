@@ -34,8 +34,8 @@ export const ResourceValSetter: React.FC<{ resource: Resource, field: string }> 
 const OutTable: React.FC<{ resource: Resource, output: {[key: string]: string}  }> = ({ output, resource }) => {
   const outputs = resource.kind?.outputs ?? {};
 
-  if (!Array.isArray(output)) {
-    return <>output</>;
+  if (!outputs) {
+    return null;
   }
   return (
     <table>
@@ -60,17 +60,17 @@ export const StepContent: React.FC<StepContentProps> = ({ resource }) => {
   return (
     <div className={styles.root}>
       <span>{resource.kind?.state.name ?? resource.state.kind}</span>
-      <table>
-        <tbody>
-        {resource.outputs.map((o, idx) => {
-          return (
-            <tr key={idx}>
-              <td><OutTable output={o} resource={resource} /></td>
-            </tr>
-          );
-        })}
-        </tbody>
-      </table>
+      {/*<table>*/}
+      {/*  <tbody>*/}
+      {/*  {resource.outputs.map((o, idx) => {*/}
+      {/*    return (*/}
+      {/*      <tr key={idx}>*/}
+      {/*        <td><OutTable output={o} resource={resource} /></td>*/}
+      {/*      </tr>*/}
+      {/*    );*/}
+      {/*  })}*/}
+      {/*  </tbody>*/}
+      {/*</table>*/}
       {Object.keys(outputs).map((k) => {
         return <ResourceValSetter key={k} resource={resource} field={k} />;
       })}

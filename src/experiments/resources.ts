@@ -6,7 +6,7 @@ function uuidv4() {
   return crypto.randomUUID();
 }
 
-const SCHEMA_VERSION = "2023-11-12 - 04:54"
+const SCHEMA_VERSION = "2023-11-12 - 07:00"
 
 export const ResourceKinds = LocalDatabase.declareTable(
   "resourceKind",
@@ -25,8 +25,6 @@ type Requirement = {
   kind: string;
   name?: string;
   description?: string;
-  many?: boolean;
-  minCount?: number;
 }
 type Requirements = {[key: string]: Requirement}
 
@@ -69,7 +67,7 @@ class BaseResource<State extends BaseState> {
 export class ResourceKind extends BaseResource<{
   id: string;
   name: string;
-  type: "step" | "subgraph";
+  type: "step" | "mergele";
   requirements?: Requirements;
   outputs?: Outputs;
 }> {
@@ -99,7 +97,8 @@ type ResourceId = string;
 type DataUri = string;
 
 
-type ResourceInputs = {[key: string]: ResourceId[] | undefined};
+export type InputGroup = {[key: string]: ResourceId};
+export type ResourceInputs = InputGroup[];
 type ResourceOutputs = {[key: string]: DataUri}[];
 export class Resource extends BaseResource<{
   id: string;
@@ -111,11 +110,8 @@ export class Resource extends BaseResource<{
 }> {
   static create = getCreator(Resource, Resources);
 
-  setInput(field: string, value: string[] | undefined) {
-    if (!this.state.inputs) {
-      this.state.inputs = {};
-    }
-    this.state.inputs[field] = value;
+  setInput(value: ResourceInputs) {
+    this.state.inputs = value;
     Resources.save();
   }
 
@@ -138,7 +134,7 @@ export class Resource extends BaseResource<{
   }
 
   get inputs(): ResourceInputs {
-    return this.state.inputs ?? {};
+    return this.state.inputs ?? [{}];
   }
 
   get hasRequirements(): boolean {
@@ -146,15 +142,12 @@ export class Resource extends BaseResource<{
     const inputs = this.inputs;
     if (!kind) return false;
     for (const key in kind.requirements) {
-      let inputResIds = inputs[key]
-      if (inputResIds === undefined) {
-        return false;
-      }
-      if (!Array.isArray(inputResIds)) {
-        inputResIds = [inputResIds];
-      }
-      for (const resId of inputResIds) {
-        const inputRes = Resources.get(resId);
+      for (const inputGroup in inputs) {
+        let inputResIds = inputs[inputGroup][key]
+        if (inputResIds === undefined) {
+          return false;
+        }
+        const inputRes = Resources.get(inputResIds);
         if (!inputRes || !inputRes.isReady) {
           return false;
         }
@@ -163,20 +156,29 @@ export class Resource extends BaseResource<{
     return true;
   }
 
-  get isDeletable(): boolean {
-    return !this.state.isManuallyDeclared && Object.keys(this.outputs ?? {}).length === 0;
+  get isEmpty(): boolean {
+    return (
+      !this.state.outputs ||
+      this.state.outputs.length === 0
+    );
   }
 
-  get parent(): Resource | undefined {
+  get isDeletable(): boolean {
+    return !this.state.isManuallyDeclared && this.isEmpty && !this.isReady;
+  }
+
+  get parents(): Resource[] {
     if (this.state.context.length === 0)  {
-      return undefined;
+      return [];
     } else {
-      return Resources.get(this.state.context[0]);
+      const parent = Resources.get(this.state.context[0])
+      return parent ? [parent] : [];
     }
   }
 
   get isOrphan(): boolean {
-    return !!this.parent;
+    return this.parents.length === 0;
+    // return this.parents.length < Math.max(this.outputs.length, 1);
   }
 
   get isReady(): boolean {

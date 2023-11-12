@@ -23,18 +23,18 @@ export function initData() {
       },
     },
   });
-  const UiComponents = ResourceKind.create({
-    name: "Component Breakdown",
+  const ComponentSpec = ResourceKind.create({
+    name: "Component Spec",
     type: "step",
+    requirements: {
+      design: UiDesign.require(),
+    },
     outputs: {
       component: {
         kind: "uri",
         description: "Break down designs to individual components",
         many: true,
       },
-    },
-    requirements: {
-      design: UiDesign.require(),
     },
   })
 
@@ -53,23 +53,44 @@ export function initData() {
     },
   });
 
-  const Implementation = ResourceKind.create({
-    name: "Implementation",
-    type: "subgraph",
+  const ComponentImplementation = ResourceKind.create({
+    name: "Component Implementation",
+    type: "step",
     requirements: {
-      components: UiComponents.require(),
+      spec: ComponentSpec.require(),
+    },
+    outputs: {
+      implementation: {
+        kind: "uri",
+        description: "Component implementation",
+        many: false,
+      },
+    },
+  });
+
+  const ComponentLibrary = ResourceKind.create({
+    name: "Component Library",
+    type: "mergele",
+    requirements: {
+      components: ComponentImplementation.require(),
+    },
+  })
+
+  const ViewImplementation = ResourceKind.create({
+    name: "View Implementation",
+    type: "step",
+    requirements: {
+      components: ComponentLibrary.require(),
       storage: StorageApi.require(),
     },
   });
 
   const Feature = ResourceKind.create({
     name: "Feature",
-    type: "step",
+    type: "mergele",
     requirements: {
-      implementation: Implementation.require({
-        many: true,
-        minCount: 1,
-      }),
+      implementation: ViewImplementation.require(),
+
     },
   });
 
@@ -82,12 +103,10 @@ export function initData() {
     name: "Web App",
     type: "step", // TODO: Change to (sub)graph
     requirements: {
-      deployment: Deployment.require(),
+      // deployment: Deployment.require(),
       features: Feature.require({
         name: "Features",
         description: "The features for this app",
-        many: true,
-        minCount: 1,
       }),
     },
   });
@@ -97,10 +116,10 @@ export function initData() {
     isManuallyDeclared: true,
     context: [],
   });
-  TodoApp.setInput("features", [
-    Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id,
-    Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id,
-    Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id,
-    Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id,
+  TodoApp.setInput([
+    { feature: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id },
+    { feature: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id },
+    { feature: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id },
+    { feature: Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id },
   ]);
 }
