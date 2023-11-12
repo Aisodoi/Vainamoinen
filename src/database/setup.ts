@@ -92,16 +92,15 @@ export function initData() {
     },
   });
 
-  Resource.create({
+  const TodoApp = Resource.create({
     kind: WebApp.id,
-    inputs: {
-      "features": [
-        Resource.create({kind: Feature.id, isManuallyDeclared: true}).id,
-        Resource.create({kind: Feature.id, isManuallyDeclared: true}).id,
-        Resource.create({kind: Feature.id, isManuallyDeclared: true}).id,
-        Resource.create({kind: Feature.id, isManuallyDeclared: true}).id,
-      ],
-    },
     isManuallyDeclared: true,
+    context: [],
   });
+  TodoApp.setInput("feaatures", [
+    Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id,
+    Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id,
+    Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id,
+    Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id,
+  ]);
 }

@@ -47,4 +47,9 @@ export class Table<T extends { state: any }> {
   get(id: string): T | undefined {
     return this.cache.get(id);
   }
+
+  del(id: string) {
+    this.cache.delete(id);
+    this.save();
+  }
 }

@@ -17,26 +17,28 @@ function updateStep(resource: Resource) {
   }
 }
 
-function splitOutputs(resource: Resource) {
-}
-
-function updateRelations(resource: Resource) {
-  // if (!resource.hasRequirements) return;
-  // const requirements = resource.kind?.requirements ?? {};
-  // const inputs = resource.inputs;
-  // for (const reqKey in requirements) {
-  //   const input = inputs[reqKey];
-  //   if (Array.isArray(input) && !requirements[reqKey].many) {
-  //   }
-  // }
-}
-
-
 export function updateGraph() {
   for (const entry of Resources.cache.values()) {
     updateStep(entry);
   }
-  // for (const entry of Resources.cache.values()) {
-  //   updateRelations(entry);
-  // }
+  const deletedResources = new Set<string>();
+
+  for (const entry of Resources.filter(x => x.isDeletable)) {
+    deletedResources.add(entry.id);
+    Resources.del(entry.id);
+  }
+
+  for (const entry of Resources.cache.values()) {
+    for (let key in entry.inputs) {
+      let val = entry.inputs[key];
+      if (!val) continue;
+      if (Array.isArray(val)) {
+        entry.setInput(key, val.filter((x) => !deletedResources.has(x)))
+      } else {
+        if (deletedResources.has(val)) {
+          entry.setInput(key, undefined);
+        }
+      }
+    }
+  }
 }

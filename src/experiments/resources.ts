@@ -99,7 +99,7 @@ type ResourceId = string;
 type DataUri = string;
 
 
-type ResourceInputs = {[key: string]: ResourceId | ResourceId[]};
+type ResourceInputs = {[key: string]: ResourceId | ResourceId[] | undefined};
 type ResourceOutputs = {[key: string]: DataUri | DataUri[]};
 export class Resource extends BaseResource<{
   id: string;
@@ -107,10 +107,11 @@ export class Resource extends BaseResource<{
   isManuallyDeclared: boolean;
   inputs?: ResourceInputs;
   outputs?: ResourceOutputs;
+  context: string[];
 }> {
   static create = getCreator(Resource, Resources);
 
-  setInput(field: string, value: string | string[]) {
+  setInput(field: string, value: string | string[] | undefined) {
     if (!this.state.inputs) {
       this.state.inputs = {};
     }
@@ -123,6 +124,11 @@ export class Resource extends BaseResource<{
       this.state.outputs = {};
     }
     this.state.outputs[field] = value;
+    Resources.save();
+  }
+
+  setContext(context: string[]) {
+    this.state.context = context;
     Resources.save();
   }
 
@@ -158,6 +164,18 @@ export class Resource extends BaseResource<{
       }
     }
     return true;
+  }
+
+  get isDeletable(): boolean {
+    return !this.state.isManuallyDeclared && Object.keys(this.outputs ?? {}).length === 0;
+  }
+
+  get isOrphan(): boolean {
+    if (this.state.context.length === 0) {
+      return false;
+    } else {
+      return !Resources.get(this.state.context[0]);
+    }
   }
 
   get isReady(): boolean {

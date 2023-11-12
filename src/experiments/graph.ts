@@ -4,6 +4,36 @@ import { Position } from "@reactflow/core";
 import { Edge } from "reactflow";
 
 
+function createChildOrLinkOrphan(resource: Resource, kind: string): Resource {
+  const context = [resource.id, ...resource.state.context];
+  const orphans = Resources.filter((x) => x.state.kind === kind && x.isOrphan);
+  let bestMatch: Resource | undefined = undefined;
+  let bestCount = 0;
+  for (const entry of orphans) {
+    let count = 0;
+    for (const id of context) {
+      if (entry.state.context.indexOf(id) > -1) {
+        count += 1;
+      }
+    }
+    if (count > bestCount) {
+      bestMatch = entry;
+    }
+  }
+
+  if (bestMatch) {
+    bestMatch.setContext(context);
+    return bestMatch;
+  } else {
+    return Resource.create({
+      kind: kind,
+      isManuallyDeclared: false,
+      context,
+    });
+  }
+}
+
+
 export function expandGraph(resource: Resource) {
   const kind = ResourceKinds.get(resource.state.kind);
 
@@ -30,16 +60,15 @@ export function expandGraph(resource: Resource) {
 
     let inputId = resource.state.inputs ? resource.state.inputs[reqSlot] : undefined;
 
-    if (inputId === undefined) {
+    if (inputId === undefined || (Array.isArray(inputId) && inputId.length < (requirement.minCount ?? 0))) {
       if (requirement.many) {
-        inputId = [];
-        for (let i = 0; i < (requirement.minCount ?? 0); i++) {
-          const res = Resource.create({ kind: requirement.kind, isManuallyDeclared: false }).id;
-          inputId.push(res);
+        inputId = inputId ?? [];
+        for (let i = inputId.length; i < (requirement.minCount ?? 0); i++) {
+          inputId.push(createChildOrLinkOrphan(resource, requirement.kind).id);
         }
         resource.setInput(reqSlot, inputId);
       } else {
-        inputId = Resource.create({ kind: requirement.kind, isManuallyDeclared: false }).id;
+        inputId = createChildOrLinkOrphan(resource, requirement.kind).id;
         resource.setInput(reqSlot, inputId);
       }
     }
