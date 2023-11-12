@@ -23,9 +23,7 @@ const edgeTypes = {
 
 export function Map() {
   const { state } = useContext(GraphRefreshContext);
-  const [graphS, setGraphS] = useState<{ edges: Edge[], nodes: RecipeProps[] }>({ edges: [], nodes: [] });
   const graph = useMemo(() => {
-    console.log(state);
     const WebApp = ResourceKinds.filter((x) => x.state.name === "Web App")[0];
     const TodoApp = Resources.filter((x) => x.state.kind === WebApp.id)[0];
     const gr = expandGraph(TodoApp);
@@ -39,10 +37,6 @@ export function Map() {
     }
     return gr;
   }, [state]);
-
-  useEffect(() => {
-    setGraphS({ edges: graph.edges, nodes: graph.nodes });
-  }, [graph.edges, graph.nodes])
   
   const getLayoutedElements = useCallback((nodes: any[], edges: any[], direction = 'LR') => {
 
