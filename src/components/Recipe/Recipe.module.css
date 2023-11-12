@@ -52,14 +52,14 @@
     --shadow-color-2: hsla(349, 87%, 67%, 0.502);
 }
 
-.root:where(.yellow) {
-    --bg-color: var(--color-yellow--10);
-    --border-color: rgb(243 207 79);
+.root:where(.white) {
+    --bg-color: var(--color-blue--10);
+    --border-color: rgb(197, 208, 219);
 }
 
-.root:where(.yellow):hover {
-    --shadow-color-1: var(--color-yellow--1);
-    --shadow-color-2: rgba(245, 217, 114, 0.502);
+.root:where(.white):hover {
+    --shadow-color-1: var(--color-blue--1);
+    --shadow-color-2: rgba(114, 177, 245, 0.502);
 }
 
 .root:where(.solid) {

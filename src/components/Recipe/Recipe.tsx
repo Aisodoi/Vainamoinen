@@ -15,7 +15,7 @@ export function Recipe(props: RecipeProps) {
   return (
     <div className={classnames(
       styles.root,
-      getStatusColor(resource.isReady ? "green" : resource.state.isManuallyDeclared ? "red" : "yellow"),
+      getStatusColor(resource.isReady ? "green" : resource.state.isManuallyDeclared ? "red" : "white"),
       getBorderSolidity(resource.state.isManuallyDeclared ? "solid" : "dashed")
       )}>
       <StepContent resource={resource} />
@@ -31,7 +31,7 @@ const getStatusColor = (scheme: string = "green") => {
   return {
     green: styles.green,
     red: styles.red,
-    yellow: styles.yellow,
+    white: styles.white,
   }[scheme];
 };
 

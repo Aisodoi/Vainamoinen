@@ -40,7 +40,7 @@ export function Map() {
   
   const getLayoutedElements = useCallback((nodes: any[], edges: any[], direction = 'LR') => {
 
-    const nodeWidth = 215;
+    const nodeWidth = 500;
     const nodeHeight = 36;
     const dagreGraph = new dagre.graphlib.Graph();
     dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -105,6 +105,8 @@ export function Map() {
   );
 
   // TODO: Replace any with proper types
+  console.log(graph.nodes);
+  console.log(graph.edges);
   return (
     <ReactFlow
       key={state}

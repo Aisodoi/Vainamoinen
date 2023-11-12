@@ -8,23 +8,36 @@ import { GraphRefreshContext } from "../GraphContext";
 
 export const ResourceValSetter: React.FC<{ resource: Resource, field: string }> = ({ resource, field }) => {
   const { refresh } = React.useContext(GraphRefreshContext);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputDescRef = useRef<HTMLInputElement>(null);
+  const inputImageRef = useRef<HTMLInputElement>(null);
 
   return (
     <div>
       <KikkulaModal
         saveOnClick={() => {
-          if (!inputRef.current) return;
+          if (!inputDescRef.current || !inputImageRef.current) return;
           // TODO: Make support multiple fields; don't override entire thing
           const res: any = {};
-          res[field] = inputRef.current.value;
+          res[field] = inputDescRef.current.value;
+          res[field] = inputImageRef.current.value;
           resource.setOutput([res]);
 
           updateGraph();
           refresh();
         }}
         title={"Edit Resource"}
-        inputs={[{label: <label htmlFor="resouce">{resource.kind?.state.name}</label>, input: <input id="resource" type={"text"} ref={inputRef}/>}]}
+        inputs={
+          [
+            {
+              label: <label htmlFor="resouce">Description</label>,
+              input: <input id="resource" type={"text"} ref={inputDescRef}/>
+            },
+            {
+              label: <label htmlFor="resouce">Source Image</label>,
+              input: <input id="resource" type={"file"} ref={inputImageRef}/>
+            }
+          ]
+        }
         trigger={<div className="iconButton" ><Edit/></div>}
         >
       </KikkulaModal>
@@ -61,17 +74,17 @@ export const StepContent: React.FC<StepContentProps> = ({ resource }) => {
   return (
     <div className={styles.root}>
       <span>{resource.name}</span>
-      {/*<table>*/}
-      {/*  <tbody>*/}
-      {/*  {resource.outputs.map((o, idx) => {*/}
-      {/*    return (*/}
-      {/*      <tr key={idx}>*/}
-      {/*        <td><OutTable output={o} resource={resource} /></td>*/}
-      {/*      </tr>*/}
-      {/*    );*/}
-      {/*  })}*/}
-      {/*  </tbody>*/}
-      {/*</table>*/}
+      <table>
+       <tbody>
+       {resource.outputs.map((o, idx) => {
+         return (
+           <tr key={idx}>
+             <td><OutTable output={o} resource={resource} /></td>
+           </tr>
+         );
+       })}
+       </tbody>
+      </table>
       {Object.keys(outputs).map((k) => {
         return <ResourceValSetter key={k} resource={resource} field={k} />;
       })}
