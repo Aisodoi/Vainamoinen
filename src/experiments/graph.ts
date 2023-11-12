@@ -11,9 +11,14 @@ function createChildOrLinkOrphan(resource: Resource, kind: string): Resource {
   let bestCount = 0;
   for (const entry of orphans) {
     let count = 0;
-    for (const id of context) {
-      if (entry.state.context.indexOf(id) > -1) {
+    for (const id of entry.state.context) {
+      if (context.indexOf(id) > -1) {
         count += 1;
+      } else {
+        if (Resources.get(id) !== undefined) {
+          count = -1;
+          break;
+        }
       }
     }
     if (count > bestCount) {

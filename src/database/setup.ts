@@ -97,7 +97,7 @@ export function initData() {
     isManuallyDeclared: true,
     context: [],
   });
-  TodoApp.setInput("feaatures", [
+  TodoApp.setInput("features", [
     Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id,
     Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id,
     Resource.create({kind: Feature.id, isManuallyDeclared: true, context: [TodoApp.id]}).id,
